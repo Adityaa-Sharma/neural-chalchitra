@@ -50,6 +50,11 @@ export function KVCachePager() {
     return () => io.disconnect()
   }, [])
 
+  // if the user enables reduce-motion mid-session, land on the summary frame
+  useEffect(() => {
+    if (reducedMotion) setFrame(FRAMES.length - 1)
+  }, [reducedMotion])
+
   useEffect(() => {
     if (reducedMotion || !visible) return
     const id = window.setInterval(

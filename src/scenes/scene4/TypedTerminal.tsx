@@ -42,6 +42,11 @@ export function TypedTerminal() {
   const [progress, setProgress] = useState(reducedMotion ? Number.MAX_SAFE_INTEGER : 0)
   const [started, setStarted] = useState(false)
 
+  // if the user enables reduce-motion mid-session, fast-forward to the end
+  useEffect(() => {
+    if (reducedMotion) setProgress(Number.MAX_SAFE_INTEGER)
+  }, [reducedMotion])
+
   // begin typing when the terminal scrolls into view
   useEffect(() => {
     if (reducedMotion) return

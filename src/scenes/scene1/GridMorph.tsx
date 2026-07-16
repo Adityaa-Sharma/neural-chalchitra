@@ -122,17 +122,23 @@ export function GridMorph() {
   useGSAP(
     () => {
       if (reducedMotion) return
-      gsap.to(tRef, {
-        current: 1,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: wrapRef.current,
-          start: 'top 75%',
-          end: 'center 40%',
-          scrub: 0.4,
+      // fromTo, not to: if reduce-motion was on earlier, tRef sits at 1 and a
+      // plain .to() would tween 1 → 1, freezing the grid fully sheared.
+      gsap.fromTo(
+        tRef,
+        { current: 0 },
+        {
+          current: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: wrapRef.current,
+            start: 'top 75%',
+            end: 'center 40%',
+            scrub: 0.4,
+          },
+          onUpdate: draw,
         },
-        onUpdate: draw,
-      })
+      )
     },
     { scope: wrapRef, dependencies: [reducedMotion] },
   )
