@@ -38,10 +38,11 @@ export function Scene3Agent() {
         <BellmanMorph />
 
         <p className="prose">
-          Learning it demands two tricks the paper is famous for: a{' '}
-          <strong>replay buffer</strong> (a million remembered transitions, sampled at random to
-          break correlation) and that frozen <strong>target network</strong> — chasing a target
-          that moves with you never converges. Plus one philosophical dial:
+          Learning it demands two tricks: a <strong>replay buffer</strong> — the 2013
+          paper&rsquo;s move — a million remembered transitions, sampled at random to break
+          correlation; and the frozen <strong>target network</strong> DeepMind added in the 2015{' '}
+          <em>Nature</em> follow-up — chasing a target that moves with you never converges. My
+          implementation uses both. Plus one philosophical dial:
         </p>
 
         <EpsilonDecay />

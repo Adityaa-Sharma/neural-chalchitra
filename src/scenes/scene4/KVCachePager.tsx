@@ -81,8 +81,8 @@ export function KVCachePager() {
       <figcaption>
         Attention needs every past token&rsquo;s K and V. Naive serving reserves one giant
         contiguous slab per user and wastes most of it. vLLM pages the cache like an OS pages
-        RAM — this is the difference between <strong>20 users and 100+</strong> on the same four
-        A100s.
+        RAM — roughly the difference between serving <strong>tens of users and 100+</strong> on
+        the same four A100s.
       </figcaption>
     </figure>
   )

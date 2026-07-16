@@ -44,7 +44,7 @@ export function BellmanMorph() {
         <Eq display tex={BELLMAN} />
       </div>
       <div className="morph-step morph-dqn">
-        <span className="morph-tag">2013 · the same idea, as a loss function</span>
+        <span className="morph-tag">2013→2015 · the same idea, as a loss function</span>
         <Eq display tex={DQN_LOSS} />
       </div>
       <div className="morph-notes">

@@ -47,8 +47,8 @@ export function Scene2Attention() {
               loading="lazy"
             />
             <figcaption>
-              The actual loss curve — five epochs, gradient accumulation to fit the T4, mixed
-              precision.{' '}
+              The actual loss curve — five epochs, lr 6·10⁻⁴, batch 64, block size 256, all of it
+              in the repo.{' '}
               <a href="https://github.com/Adityaa-Sharma/GPT-2-Scratch" target="_blank" rel="noreferrer">
                 GPT-2-Scratch ↗
               </a>
