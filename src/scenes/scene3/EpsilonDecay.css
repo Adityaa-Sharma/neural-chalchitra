@@ -1,0 +1,43 @@
+.eps-decay {
+  margin-block: var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  padding: var(--space-3);
+}
+
+.eps-axis {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.eps-curve {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2.5;
+}
+
+.eps-knee {
+  fill: var(--teal);
+}
+
+.eps-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-faint);
+}
+
+.eps-label-knee {
+  fill: var(--teal);
+  text-anchor: middle;
+}
+
+.eps-label-axis {
+  text-anchor: end;
+}
+
+.eps-decay figcaption {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+}

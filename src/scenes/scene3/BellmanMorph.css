@@ -1,0 +1,64 @@
+.bellman-morph {
+  margin-block: var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  padding: var(--space-4) var(--space-3);
+  text-align: center;
+  overflow-x: auto;
+}
+
+.morph-step .katex-display {
+  margin: var(--space-2) 0 0;
+  font-size: clamp(0.85rem, 0.55rem + 1.6vw, 1.35rem);
+}
+
+.morph-tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.morph-dqn {
+  margin-top: var(--space-4);
+}
+
+.morph-dqn .morph-tag {
+  color: var(--gold);
+}
+
+.t-target {
+  color: var(--teal);
+}
+
+.t-online {
+  color: var(--gold);
+}
+
+.morph-notes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--ink-dim);
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.dot-teal {
+  background: var(--teal);
+}
+
+.dot-gold {
+  background: var(--gold);
+}
