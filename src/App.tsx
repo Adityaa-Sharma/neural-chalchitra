@@ -7,6 +7,8 @@ import { GrainOverlay } from './components/GrainOverlay'
 import { FilmProgress } from './components/FilmProgress'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
 import { useGlowCards } from './hooks/useGlowCards'
+import { registerLenis } from './lib/scrollNav'
+import { VoiceGuide } from './voice/VoiceGuide'
 
 import { TitleCard } from './scenes/TitleCard'
 
@@ -55,6 +57,7 @@ function App() {
 
     const lenis = new Lenis({ autoRaf: false })
     lenis.on('scroll', ScrollTrigger.update)
+    registerLenis(lenis)
 
     const raf = (time: number) => lenis.raf(time * 1000)
     gsap.ticker.add(raf)
@@ -62,6 +65,7 @@ function App() {
 
     return () => {
       gsap.ticker.remove(raf)
+      registerLenis(null)
       lenis.destroy()
     }
   }, [reducedMotion])
@@ -81,6 +85,7 @@ function App() {
         </Suspense>
       </main>
       <GrainOverlay />
+      <VoiceGuide />
     </>
   )
 }

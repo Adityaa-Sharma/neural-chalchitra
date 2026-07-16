@@ -1,0 +1,14 @@
+name = "neural-chalchitra-voice"
+main = "worker.js"
+compatibility_date = "2026-07-01"
+
+# Per-IP rate limit: 8 requests per minute. This binding ships on the free
+# plan and is the main guard for your prepaid Sarvam credits.
+[[unsafe.bindings]]
+name = "RATE_LIMITER"
+type = "ratelimit"
+namespace_id = "1001"
+simple = { limit = 8, period = 60 }
+
+# Secret (never in this file): run
+#   npx wrangler secret put SARVAM_API_KEY

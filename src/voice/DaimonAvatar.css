@@ -1,0 +1,120 @@
+.daimon {
+  --level: 0;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.daimon svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.daimon-orb {
+  fill: color-mix(in srgb, var(--gold) 24%, var(--bg-panel));
+  stroke: var(--gold);
+  stroke-width: 1.5;
+}
+
+.daimon-ring {
+  fill: none;
+  stroke: color-mix(in srgb, var(--gold) 45%, transparent);
+  stroke-width: 1;
+  transform-origin: center;
+  transform: scale(calc(0.92 + var(--level) * 0.35));
+  opacity: calc(0.35 + var(--level) * 0.65);
+  transition: opacity 0.2s;
+}
+
+.daimon-eye {
+  fill: var(--gold);
+  transform-origin: center;
+}
+
+.daimon-mouth rect {
+  fill: var(--gold);
+  opacity: 0;
+  transform-origin: center 44.5px;
+}
+
+.daimon-orbit circle {
+  fill: var(--gold);
+  opacity: 0;
+}
+
+/* ————— states ————— */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* idle: slow breath + occasional blink */
+  .daimon-idle .daimon-orb {
+    animation: daimon-breathe 4.5s ease-in-out infinite;
+  }
+
+  .daimon-idle .daimon-eye {
+    animation: daimon-blink 5.2s infinite;
+  }
+
+  .daimon-thinking .daimon-orbit {
+    transform-origin: center;
+    animation: daimon-orbit 1.6s linear infinite;
+  }
+
+  .daimon-speaking .daimon-mouth rect {
+    animation: daimon-babble 0.42s ease-in-out infinite;
+  }
+
+  .daimon-speaking .daimon-mouth rect:nth-child(2) {
+    animation-delay: 0.14s;
+  }
+
+  .daimon-speaking .daimon-mouth rect:nth-child(3) {
+    animation-delay: 0.28s;
+  }
+}
+
+.daimon-listening .daimon-eye {
+  transform: scaleY(1.25);
+}
+
+.daimon-thinking .daimon-orbit circle {
+  opacity: 0.9;
+}
+
+.daimon-thinking .daimon-eyes {
+  transform: translateY(1px);
+}
+
+.daimon-speaking .daimon-mouth rect {
+  opacity: 1;
+  transform: scaleY(calc(0.6 + var(--level) * 1.6));
+}
+
+.daimon-error .daimon-orb {
+  stroke: var(--slate-red);
+  fill: color-mix(in srgb, var(--slate-red) 18%, var(--bg-panel));
+}
+
+.daimon-error .daimon-eye {
+  fill: var(--slate-red);
+  transform: scaleY(0.45);
+}
+
+@keyframes daimon-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@keyframes daimon-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.08); }
+}
+
+@keyframes daimon-orbit {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes daimon-babble {
+  0%, 100% { transform: scaleY(0.7); }
+  50% { transform: scaleY(1.5); }
+}
