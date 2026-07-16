@@ -157,10 +157,18 @@ export function useVoiceGuide() {
             ? { body }
             : { headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }),
         })
-        if (!res.ok) throw new Error(`proxy ${res.status}`)
+        if (!res.ok) {
+          fallback(
+            text,
+            res.status === 429
+              ? 'the daimon is catching its breath — try again in a minute'
+              : `guide hit a snag (${res.status}) — navigating locally`,
+          )
+          return
+        }
         await handleResponse(await res.json())
       } catch {
-        fallback(text, 'guide unreachable — using local navigation')
+        fallback(text, 'guide unreachable — navigating locally')
       }
     },
     [configured, fallback, handleResponse],
