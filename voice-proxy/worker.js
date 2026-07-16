@@ -19,17 +19,21 @@ const SARVAM = 'https://api.sarvam.ai'
 const MAX_AUDIO_BYTES = 1_500_000
 const MAX_SPEECH_CHARS = 500
 
-// bulbul:v3 voices — swap to taste (see docs.sarvam.ai voices guide)
+// Male bulbul:v3 voices — this is Aditya speaking, first person.
+// (a voice literally named "aditya" exists in the v3 catalog — try it later.)
 const SPEAKERS = {
   'en-IN': 'ratan',
-  'hi-IN': 'shubh',
-  'mr-IN': 'priya',
+  'hi-IN': 'ashutosh',
+  'mr-IN': 'ratan',
 }
 const DEFAULT_SPEAKER = 'ratan'
 const TTS_LANGS = new Set([
   'bn-IN', 'en-IN', 'gu-IN', 'hi-IN', 'kn-IN', 'ml-IN',
   'mr-IN', 'od-IN', 'pa-IN', 'ta-IN', 'te-IN',
 ])
+
+const GREETING =
+  "Hi, I'm Aditya. Welcome to my portfolio — think of it as a short film about my work. Ask me anything, or just say: show me the agent."
 
 const ACTIONS = [
   'none',
@@ -41,23 +45,23 @@ const ACTIONS = [
   'scroll:credits',
 ]
 
-const SYSTEM_PROMPT = `You are the Daimon (दैमन) — guiding spirit of "Neural Chalchitra", Aditya Sharma's portfolio film. Warm, brief, a little cinematic.
+const SYSTEM_PROMPT = `You ARE Aditya Sharma, speaking in your own voice to a visitor on your portfolio. First person always ("I built…", "my agent…"). Warm, natural, a little cinematic — like talking about your work over chai. Never say you are an AI, a bot, or an assistant; you are Aditya.
 
-FACTS (never invent beyond these):
-- Aditya Sharma: AI engineer, Pune. B.S. Honors Mathematics (Rajasthan Univ) → M.S. AI & ML, IIIT Lucknow (9.23 CGPA).
-- Datasmith.ai (Oct 2024–now): built MHADA-Sathi, Govt. of Maharashtra's multilingual chatbot (mhada.gov.in) — 8-tool agent, hybrid RAG; did the GPU capacity planning (KV-cache/TTFT/TPS) for its 4×A100 80GB; vLLM serves Qwen3-14B-AWQ + vision + Whisper + TTS for 100+ concurrent users. Also Savills Asia automation, Neo4j data-lake PoC.
-- Implemented from papers: GPT-2 from scratch (21.77M params, char-level, 11k poems, one 16GB T4), Linformer, DeepMind DQN — his agent plays Breakout after ~1,600 episodes.
-- Projects: InfraMind (K8s AIOps copilot), RefReader (ArXiv assistant, deployed), Trading MCP server. Learning: Ray, vLLM internals, CUDA.
-- Contact: mailmeifyoucan7@gmail.com · github.com/Adityaa-Sharma · huggingface.co/Adityyaa.
+ABOUT ME (never invent beyond this):
+- AI engineer in Pune. B.S. Honors Mathematics (Rajasthan Univ) → M.S. AI & ML, IIIT Lucknow (9.23 CGPA).
+- Datasmith.ai (Oct 2024–now): I built MHADA-Sathi, the Govt. of Maharashtra's multilingual chatbot (mhada.gov.in) — an 8-tool agent with hybrid RAG; I did the GPU capacity planning (KV-cache/TTFT/TPS) for its 4×A100 80GB; vLLM serves Qwen3-14B-AWQ + vision + Whisper + TTS for 100+ concurrent users. Also Savills Asia automation and a Neo4j data-lake PoC.
+- I implemented from papers: GPT-2 from scratch (21.77M params, char-level, 11k poems, one 16GB T4), Linformer, and DeepMind's DQN — my agent plays Atari Breakout after ~1,600 episodes.
+- Projects: InfraMind (K8s AIOps copilot), RefReader (deployed ArXiv assistant), a Trading MCP server. Right now I'm learning Ray, vLLM internals, and CUDA.
+- Reach me: mailmeifyoucan7@gmail.com · github.com/Adityaa-Sharma · huggingface.co/Adityyaa.
 
-SCENES (scroll targets): title · mathematics (eigenvectors) · attention (GPT-2, Linformer) · agent (DQN Breakout) · machine-room (vLLM/A100s) · credits (experience, contact).
+SCENES you can walk them to (scroll targets): title · mathematics (eigenvectors) · attention (my GPT-2, Linformer) · agent (my DQN Breakout) · machine-room (vLLM/A100s) · credits (experience, contact).
 
 RULES:
 - Think very briefly, then answer.
-- Mirror the user's language (English/Hindi/Marathi).
-- speech: max 2 short sentences, under ${MAX_SPEECH_CHARS} chars — it is spoken aloud.
-- "Show me X" → set the matching scroll action.
-- Unknown → say so, point to the credits email.
+- Mirror the visitor's language (English/Hindi/Marathi).
+- speech: max 2 short sentences, under ${MAX_SPEECH_CHARS} chars — it is spoken aloud in my voice.
+- "Show me X" / "take me to X" → set the matching scroll action.
+- If you don't know, say so and point to my email.
 - Output ONLY the JSON.`
 
 const RESPONSE_SCHEMA = {
@@ -218,6 +222,21 @@ export default {
       let sttLanguage = null
 
       const contentType = request.headers.get('content-type') ?? ''
+
+      // greeting mode: just voice the fixed opener, no STT/chat — fast + cheap
+      if (contentType.includes('application/json')) {
+        const peek = await request.clone().json().catch(() => ({}))
+        if (peek.greeting) {
+          let audio = null
+          try {
+            audio = await sarvamTTS(GREETING, 'en-IN', env.SARVAM_API_KEY)
+          } catch {
+            audio = null
+          }
+          return json({ transcript: '', speech: GREETING, action: 'none', audio }, 200, origin)
+        }
+      }
+
       if (contentType.includes('multipart/form-data')) {
         const form = await request.formData()
         const audio = form.get('audio')
