@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
@@ -8,13 +8,28 @@ import { FilmProgress } from './components/FilmProgress'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
 
 import { TitleCard } from './scenes/TitleCard'
-import { Scene1Math } from './scenes/Scene1Math'
-import { Scene2Attention } from './scenes/Scene2Attention'
-import { Scene3Agent } from './scenes/Scene3Agent'
-import { Scene4MachineRoom } from './scenes/Scene4MachineRoom'
-import { Credits } from './scenes/Credits'
 
 gsap.registerPlugin(ScrollTrigger)
+
+/* Every scene below the fold is its own chunk — KaTeX, Mafs and friends
+   only download when the film actually reaches them. */
+const Scene1Math = lazy(() =>
+  import('./scenes/Scene1Math').then((m) => ({ default: m.Scene1Math })),
+)
+const Scene2Attention = lazy(() =>
+  import('./scenes/Scene2Attention').then((m) => ({ default: m.Scene2Attention })),
+)
+const Scene3Agent = lazy(() =>
+  import('./scenes/Scene3Agent').then((m) => ({ default: m.Scene3Agent })),
+)
+const Scene4MachineRoom = lazy(() =>
+  import('./scenes/Scene4MachineRoom').then((m) => ({ default: m.Scene4MachineRoom })),
+)
+const Credits = lazy(() => import('./scenes/Credits').then((m) => ({ default: m.Credits })))
+
+function SceneFallback() {
+  return <div className="scene" aria-hidden="true" />
+}
 
 function App() {
   const reducedMotion = usePrefersReducedMotion()
@@ -37,16 +52,24 @@ function App() {
     }
   }, [reducedMotion])
 
+  // lazy chunks change the page height as they land — recompute trigger positions
+  useEffect(() => {
+    const id = window.setTimeout(() => ScrollTrigger.refresh(), 900)
+    return () => window.clearTimeout(id)
+  }, [])
+
   return (
     <>
       <FilmProgress />
       <main>
         <TitleCard />
-        <Scene1Math />
-        <Scene2Attention />
-        <Scene3Agent />
-        <Scene4MachineRoom />
-        <Credits />
+        <Suspense fallback={<SceneFallback />}>
+          <Scene1Math />
+          <Scene2Attention />
+          <Scene3Agent />
+          <Scene4MachineRoom />
+          <Credits />
+        </Suspense>
       </main>
       <GrainOverlay />
     </>
