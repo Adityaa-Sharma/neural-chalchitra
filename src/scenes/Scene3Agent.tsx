@@ -1,3 +1,5 @@
+import { Reveal } from '../components/Reveal'
+import { RevealTitle } from '../components/RevealTitle'
 import { asset } from '../lib/asset'
 import { BellmanMorph } from './scene3/BellmanMorph'
 import { EpsilonDecay } from './scene3/EpsilonDecay'
@@ -19,36 +21,38 @@ export function Scene3Agent() {
   return (
     <section className="scene" id="agent">
       <div className="scene-inner">
-        <div className="slate">
+        <Reveal className="slate">
           <strong>Scene 03</strong> The Agent · कर्ता
-        </div>
+        </Reveal>
 
-        <h2 className="scene-title">
+        <RevealTitle className="scene-title">
           Then the model stopped predicting, and started acting.
-        </h2>
+        </RevealTitle>
 
-        <p className="prose">
+        <Reveal as="p" className="prose">
           A poet model answers <em>&ldquo;what comes next?&rdquo;</em> An agent answers{' '}
           <em>&ldquo;what should I do next?&rdquo;</em> — and the world answers back with a
           reward. I implemented <strong>Playing Atari with Deep Reinforcement Learning</strong>{' '}
-          (DeepMind, 2013) from the paper: one convolutional network, pixels in, Q-values out. The
-          math is older than the hardware:
-        </p>
+          (DeepMind, 2013) from the paper: one convolutional network, pixels in, action values
+          out. The math is older than the hardware:
+        </Reveal>
 
         <BellmanMorph />
 
-        <p className="prose">
+        <Reveal as="p" className="prose">
           Learning it demands two tricks: a <strong>replay buffer</strong> — the 2013
           paper&rsquo;s move — a million remembered transitions, sampled at random to break
           correlation; and the frozen <strong>target network</strong> DeepMind added in the 2015{' '}
           <em>Nature</em> follow-up — chasing a target that moves with you never converges. My
           implementation uses both. Plus one philosophical dial:
-        </p>
+        </Reveal>
 
-        <EpsilonDecay />
+        <Reveal>
+          <EpsilonDecay />
+        </Reveal>
 
         <div className="agent-showcase">
-          <figure className="arcade">
+          <Reveal as="figure" className="arcade">
             <div className="arcade-screen">
               <img
                 src={asset('assets/dqn/DQN_Agent.gif')}
@@ -63,9 +67,9 @@ export function Scene3Agent() {
                 DeepQlearning ↗
               </a>
             </figcaption>
-          </figure>
+          </Reveal>
 
-          <dl className="spec-card">
+          <Reveal as="dl" className="spec-card glow-card" delay={0.12}>
             <div className="spec-card-title">breakout.pth — training card</div>
             {DQN_SPEC.map(([k, v]) => (
               <div className="spec-item" key={k}>
@@ -73,11 +77,11 @@ export function Scene3Agent() {
                 <dd>{v}</dd>
               </div>
             ))}
-          </dl>
+          </Reveal>
         </div>
 
         <div className="spec-row">
-          <figure className="plot-card">
+          <Reveal as="figure" className="plot-card glow-card">
             <img
               src={asset('assets/dqn/training_metrics.png')}
               alt="DQN training metrics: loss, reward, Q-values, epsilon"
@@ -86,8 +90,8 @@ export function Scene3Agent() {
               height={4500}
             />
             <figcaption>Training: Huber loss, reward per episode, mean Q, ε decay.</figcaption>
-          </figure>
-          <figure className="plot-card">
+          </Reveal>
+          <Reveal as="figure" className="plot-card glow-card" delay={0.12}>
             <img
               src={asset('assets/dqn/evaluation_metrics.png')}
               alt="DQN evaluation metrics"
@@ -95,15 +99,15 @@ export function Scene3Agent() {
               width={3000}
               height={3000}
             />
-            <figcaption>Evaluation: the Q-values learned to mean something.</figcaption>
-          </figure>
+            <figcaption>Evaluation: the action values learned to mean something.</figcaption>
+          </Reveal>
         </div>
 
-        <p className="prose scene-beat">
+        <Reveal as="p" className="prose scene-beat">
           An agent that plays in a notebook is a demo. To matter, models have to{' '}
           <strong>serve</strong> — reliably, in parallel, for real people. Final scene: the
           machine room.
-        </p>
+        </Reveal>
       </div>
     </section>
   )

@@ -1,0 +1,39 @@
+.photo-still {
+  width: min(280px, 72vw);
+}
+
+.photo-still-frame {
+  border: 1px solid color-mix(in srgb, var(--gold) 25%, transparent);
+  border-radius: 6px;
+  padding: 10px;
+  background: var(--bg-raised);
+}
+
+.photo-still img {
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+  filter: grayscale(1) contrast(1.05) brightness(0.95);
+  transition: filter 0.45s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* comes alive when you reach for it */
+  .photo-still:hover img {
+    filter: grayscale(0.15) contrast(1.02) brightness(1);
+  }
+}
+
+.photo-still figcaption {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  line-height: 1.9;
+}
+
+.photo-still figcaption span {
+  color: var(--gold-deep);
+}

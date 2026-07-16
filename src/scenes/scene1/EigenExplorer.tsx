@@ -51,16 +51,12 @@ export function EigenExplorer() {
       </div>
 
       <div className="eigen-caption">
-        <Eq
-          display
-          tex="A = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}"
-        />
         <p>
-          Drag the <strong className="c-gold">gold vector</strong>. The{' '}
-          <strong className="c-teal">teal one</strong> is <Eq tex="A\vec{v}" /> — where the matrix
-          sends it. Most directions get knocked off course. But two directions refuse to turn:
-          the matrix can only stretch them. Find one, and you have found an{' '}
-          <strong>eigenvector</strong>.
+          Behind this plane sits one fixed matrix. Drag the{' '}
+          <strong className="c-gold">gold vector</strong> — the{' '}
+          <strong className="c-teal">teal one</strong> is where the matrix sends it. Most
+          directions get knocked off course. But two directions refuse to turn: the matrix can
+          only stretch them. Find one, and you have found an <strong>eigenvector</strong>.
         </p>
         <p className="eigen-hint">hint: try the diagonals.</p>
       </div>

@@ -3,7 +3,6 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
-import { Eq } from '../../components/Eq'
 import './GridMorph.css'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
@@ -147,11 +146,10 @@ export function GridMorph() {
     <div className="grid-morph" ref={wrapRef}>
       <canvas ref={canvasRef} className="grid-morph-canvas" aria-hidden="true" />
       <div className="grid-morph-legend">
-        <Eq tex="M(t) = I + t\,(A - I)" />
         <p>
-          Keep scrolling — <Eq tex="t" /> goes from 0 to 1 and <strong>space itself bends</strong>.
-          The gold arrow is <Eq tex="\hat{\imath}" />, the teal one <Eq tex="\hat{\jmath}" />. A
-          matrix is nothing more than where it sends the basis.
+          Keep scrolling — <strong>space itself bends</strong>. The gold arrow is where
+          &ldquo;right&rdquo; goes, the teal one where &ldquo;up&rdquo; goes. A matrix is nothing
+          more than where it sends the grid.
         </p>
       </div>
     </div>

@@ -49,11 +49,10 @@ export function BellmanMorph() {
       </div>
       <div className="morph-notes">
         <span>
-          <i className="dot dot-teal" /> <Eq tex="\theta^{-}" /> — frozen target network, synced
-          every 10k steps
+          <i className="dot dot-teal" /> θ⁻ — frozen target network, synced every 10k steps
         </span>
         <span>
-          <i className="dot dot-gold" /> <Eq tex="\theta" /> — the network learning right now
+          <i className="dot dot-gold" /> θ — the network learning right now
         </span>
       </div>
     </div>

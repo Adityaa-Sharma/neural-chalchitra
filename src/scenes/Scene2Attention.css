@@ -72,36 +72,6 @@
   text-align: right;
 }
 
-.linformer-eqs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-  gap: var(--space-4);
-  margin-block: var(--space-4);
-}
-
-.linformer-eqs > div {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--bg-raised);
-  padding: var(--space-3);
-  text-align: center;
-}
-
-.linformer-eqs .katex-display {
-  margin: 0 0 var(--space-2);
-}
-
-.eq-tag {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.eq-tag-n2 {
-  color: var(--slate-red);
-}
-
-.eq-tag-n {
-  color: var(--teal);
+.scene-subtitle {
+  max-width: 26ch;
 }

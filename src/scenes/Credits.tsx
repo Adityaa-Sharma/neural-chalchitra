@@ -1,3 +1,9 @@
+import type { ReactNode } from 'react'
+import { Reveal } from '../components/Reveal'
+import { RevealTitle } from '../components/RevealTitle'
+import { LiveClock } from '../components/LiveClock'
+import { PhotoStill } from '../components/PhotoStill'
+import { useMagnetic } from '../hooks/useMagnetic'
 import { asset } from '../lib/asset'
 import './Credits.css'
 
@@ -19,18 +25,39 @@ const NOW = [
   'v2 of this site — my DQN playing Breakout live in your browser (ONNX + ALE-WASM)',
 ]
 
+function MagneticLink({ href, children }: { href: string; children: ReactNode }) {
+  const ref = useMagnetic<HTMLAnchorElement>()
+  const external = href.startsWith('http') || href.endsWith('.pdf')
+  return (
+    <a ref={ref} href={href} {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}>
+      {children}
+    </a>
+  )
+}
+
 export function Credits() {
   return (
     <section className="scene credits" id="credits">
       <div className="scene-inner">
-        <div className="slate">
+        <Reveal className="slate">
           <strong>End Credits</strong> समाप्त
+        </Reveal>
+
+        <RevealTitle className="scene-title">Every film ends with names.</RevealTitle>
+
+        <div className="credits-lead">
+          <Reveal>
+            <PhotoStill />
+          </Reveal>
+          <Reveal as="p" className="prose" delay={0.1}>
+            The plane, the attention, the agent, the machine room — one person carried the camera
+            through all of it. I like problems where the math has to survive contact with
+            production. If you have one of those, the contacts are below.
+          </Reveal>
         </div>
 
-        <h2 className="scene-title">Every film ends with names.</h2>
-
         <div className="credits-work">
-          <div className="credits-block">
+          <Reveal className="credits-block">
             <h3>Experience</h3>
             <div className="credit-entry">
               <div className="credit-head">
@@ -51,12 +78,12 @@ export function Credits() {
               </div>
               <p>Natural-language multi-database querying PoC; custom GPT builds.</p>
             </div>
-          </div>
+          </Reveal>
 
-          <div className="credits-block">
+          <Reveal className="credits-block" delay={0.08}>
             <h3>Also featuring</h3>
             <a
-              className="credit-card"
+              className="credit-card glow-card"
               href="https://github.com/Adityaa-Sharma/Ref_Reader_backend"
               target="_blank"
               rel="noreferrer"
@@ -69,7 +96,7 @@ export function Credits() {
               <span>python · fastapi · qdrant · docker</span>
             </a>
             <a
-              className="credit-card"
+              className="credit-card glow-card"
               href="https://github.com/Adityaa-Sharma/Trading_mcp_server"
               target="_blank"
               rel="noreferrer"
@@ -81,48 +108,44 @@ export function Credits() {
               </p>
               <span>mcp · pydantic · upstox api</span>
             </a>
-          </div>
+          </Reveal>
 
-          <div className="credits-block">
+          <Reveal className="credits-block" delay={0.16}>
             <h3>Currently noodling on</h3>
             <ul className="now-list">
               {NOW.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
-          </div>
+          </Reveal>
         </div>
 
-        <div className="credits-roll" aria-label="credits">
+        <Reveal className="credits-roll" aria-label="credits">
           {ROLL.map(([role, name]) => (
             <div className="roll-line" key={role}>
               <span className="roll-role">{role}</span>
               <span className="roll-name">{name}</span>
             </div>
           ))}
-        </div>
+        </Reveal>
 
-        <div className="credits-contact">
-          <a href="mailto:mailmeifyoucan7@gmail.com">email</a>
-          <a href="https://github.com/Adityaa-Sharma" target="_blank" rel="noreferrer">
-            github
-          </a>
-          <a href="https://huggingface.co/Adityyaa" target="_blank" rel="noreferrer">
-            hugging face
-          </a>
-          <a href={asset('Aditya_Sharma_Resume.pdf')} target="_blank" rel="noreferrer">
-            resume.pdf
-          </a>
-        </div>
+        <Reveal className="credits-contact">
+          <MagneticLink href="mailto:mailmeifyoucan7@gmail.com">email</MagneticLink>
+          <MagneticLink href="https://github.com/Adityaa-Sharma">github</MagneticLink>
+          <MagneticLink href="https://huggingface.co/Adityyaa">hugging face</MagneticLink>
+          <MagneticLink href={asset('Aditya_Sharma_Resume.pdf')}>resume.pdf</MagneticLink>
+        </Reveal>
 
-        <p className="credits-end">
+        <Reveal as="p" className="credits-end">
           फिर मिलेंगे — <em>see you in the sequel.</em>
           <br />
           <span>
             © 2026 Aditya Sharma · hand-built with React, GSAP &amp; KaTeX · no portfolio
             templates were harmed
           </span>
-        </p>
+          <br />
+          <LiveClock />
+        </Reveal>
       </div>
     </section>
   )

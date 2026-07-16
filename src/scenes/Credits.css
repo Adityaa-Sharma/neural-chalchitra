@@ -4,6 +4,18 @@
     var(--bg);
 }
 
+.credits-lead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-5);
+  margin-block: var(--space-5);
+}
+
+.credits-lead .prose {
+  flex: 1 1 24rem;
+}
+
 .credits-work {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));

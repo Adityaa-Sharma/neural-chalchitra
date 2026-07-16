@@ -1,7 +1,9 @@
-import { Eq } from '../components/Eq'
+import { Reveal } from '../components/Reveal'
+import { RevealTitle } from '../components/RevealTitle'
 import { asset } from '../lib/asset'
 import { AttentionFormula } from './scene2/AttentionFormula'
 import { AttentionViz } from './scene2/AttentionViz'
+import { ComplexityBars } from './scene2/ComplexityBars'
 import './Scene2Attention.css'
 
 const GPT2_SPEC = [
@@ -17,30 +19,34 @@ export function Scene2Attention() {
   return (
     <section className="scene" id="attention">
       <div className="scene-inner">
-        <div className="slate">
+        <Reveal className="slate">
           <strong>Scene 02</strong> Attention · ध्यान
-        </div>
+        </Reveal>
 
-        <h2 className="scene-title">Then the matrices learned where to look.</h2>
+        <RevealTitle className="scene-title">
+          Then the matrices learned where to look.
+        </RevealTitle>
 
-        <p className="prose">
+        <Reveal as="p" className="prose">
           In early 2025 I worked through Raschka&rsquo;s <em>LLMs from Scratch</em> — then closed
           the book and built my own. I scraped <strong>11,000 poems</strong>, wrote a character
           tokenizer, and trained a <strong>21.77M-parameter GPT-2</strong> from nothing but{' '}
           <em>Attention Is All You Need</em> and a 16&nbsp;GB T4. One equation carries the whole
-          architecture:
-        </p>
+          architecture — and it deserves the spotlight:
+        </Reveal>
 
         <AttentionFormula />
 
-        <p className="prose">
+        <Reveal as="p" className="prose">
           Equations are one thing. <strong>Watching a head think</strong> is another:
-        </p>
+        </Reveal>
 
-        <AttentionViz />
+        <Reveal>
+          <AttentionViz />
+        </Reveal>
 
         <div className="spec-row">
-          <figure className="plot-card">
+          <Reveal as="figure" className="plot-card glow-card">
             <img
               src={asset('assets/gpt2/character_tokenized_model_loss.png')}
               alt="Training and validation loss of the character-level GPT-2"
@@ -55,9 +61,9 @@ export function Scene2Attention() {
                 GPT-2-Scratch ↗
               </a>
             </figcaption>
-          </figure>
+          </Reveal>
 
-          <dl className="spec-card">
+          <Reveal as="dl" className="spec-card glow-card" delay={0.12}>
             <div className="spec-card-title">poet.pth — model card</div>
             {GPT2_SPEC.map(([k, v]) => (
               <div className="spec-item" key={k}>
@@ -65,32 +71,25 @@ export function Scene2Attention() {
                 <dd>{v}</dd>
               </div>
             ))}
-          </dl>
+          </Reveal>
         </div>
 
-        <h3 className="scene-subtitle">Then I asked: is N² even necessary?</h3>
+        <RevealTitle className="scene-subtitle">
+          Then I asked: does every token really need to greet every token?
+        </RevealTitle>
 
-        <p className="prose">
-          That <Eq tex="QK^{\top}" /> handshake costs <Eq tex="O(N^2)" /> — every token greets
-          every token. The <strong>Linformer</strong> paper (2020) claims attention&rsquo;s heart
-          is low-rank: project keys and values through thin matrices <Eq tex="E, F" /> and pay
-          only <Eq tex="O(N)" />. I didn&rsquo;t take the paper&rsquo;s word for it —{' '}
+        <Reveal as="p" className="prose">
+          The attention you just watched is all-pairs — its cost grows with the{' '}
+          <em>square</em> of the context. The <strong>Linformer</strong> paper (2020) claimed the
+          heart of attention is low-rank: squeeze the keys and values through a thin bottleneck
+          and pay a linear price instead. I didn&rsquo;t take the paper&rsquo;s word for it —{' '}
           <strong>I implemented it</strong>:
-        </p>
+        </Reveal>
 
-        <div className="linformer-eqs">
-          <div>
-            <Eq display tex="\operatorname{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right)V" />
-            <span className="eq-tag eq-tag-n2">O(N²) — the original</span>
-          </div>
-          <div>
-            <Eq display tex="\operatorname{softmax}\!\left(\frac{Q\,(EK)^{\top}}{\sqrt{d_k}}\right)(FV)" />
-            <span className="eq-tag eq-tag-n">O(N) — Linformer</span>
-          </div>
-        </div>
+        <ComplexityBars />
 
         <div className="spec-row">
-          <figure className="plot-card">
+          <Reveal as="figure" className="plot-card glow-card">
             <img
               src={asset('assets/linformer/val_loss.png')}
               alt="Linformer validation loss"
@@ -99,8 +98,8 @@ export function Scene2Attention() {
               height={500}
             />
             <figcaption>Linformer validation loss — it learns.</figcaption>
-          </figure>
-          <figure className="plot-card">
+          </Reveal>
+          <Reveal as="figure" className="plot-card glow-card" delay={0.12}>
             <img
               src={asset('assets/linformer/loss_ratio.png')}
               alt="Loss ratio between Linformer and baseline attention"
@@ -118,13 +117,13 @@ export function Scene2Attention() {
                 Linformer implementation ↗
               </a>
             </figcaption>
-          </figure>
+          </Reveal>
         </div>
 
-        <p className="prose scene-beat">
+        <Reveal as="p" className="prose scene-beat">
           A transformer predicts the next token. <strong>What if the next prediction were an
           action?</strong>
-        </p>
+        </Reveal>
       </div>
     </section>
   )

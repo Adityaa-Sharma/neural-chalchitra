@@ -1,0 +1,67 @@
+.complexity {
+  margin-block: var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  padding: var(--space-4);
+}
+
+.cx-row {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr 6.5rem;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.cx-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.cx-bar {
+  height: 10px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--line) 55%, transparent);
+  overflow: hidden;
+}
+
+.cx-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.cx-full {
+  background: linear-gradient(90deg, var(--gold-deep), var(--slate-red));
+}
+
+.cx-linf {
+  background: var(--teal);
+}
+
+.cx-count {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.c-red {
+  color: var(--slate-red);
+}
+
+.complexity figcaption {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+  max-width: 58ch;
+}
+
+@media (max-width: 560px) {
+  .cx-row {
+    grid-template-columns: 6rem 1fr 5rem;
+  }
+}

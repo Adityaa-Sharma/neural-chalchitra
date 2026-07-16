@@ -6,16 +6,17 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
-interface RevealProps {
+type RevealProps = {
   as?: ElementType
   className?: string
   delay?: number
   children: ReactNode
-}
+} & Record<string, unknown>
 
 /** The site's one entrance: blur + fade + small rise, fired once on scroll-in.
- *  8-24px travel and a single easing keep the motion felt rather than seen. */
-export function Reveal({ as: Tag = 'div', className, delay = 0, children }: RevealProps) {
+ *  8-24px travel and a single easing keep the motion felt rather than seen.
+ *  Extra props (href, target, …) pass through to the rendered tag. */
+export function Reveal({ as: Tag = 'div', className, delay = 0, children, ...rest }: RevealProps) {
   const ref = useRef<HTMLElement>(null)
   const reducedMotion = usePrefersReducedMotion()
 
@@ -40,7 +41,7 @@ export function Reveal({ as: Tag = 'div', className, delay = 0, children }: Reve
   )
 
   return (
-    <Tag ref={ref} className={className}>
+    <Tag ref={ref} className={className} {...rest}>
       {children}
     </Tag>
   )

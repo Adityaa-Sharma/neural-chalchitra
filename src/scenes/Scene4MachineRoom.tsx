@@ -1,3 +1,5 @@
+import { Reveal } from '../components/Reveal'
+import { RevealTitle } from '../components/RevealTitle'
 import { TypedTerminal } from './scene4/TypedTerminal'
 import { KVCachePager } from './scene4/KVCachePager'
 import './Scene4MachineRoom.css'
@@ -6,13 +8,13 @@ export function Scene4MachineRoom() {
   return (
     <section className="scene" id="machine-room">
       <div className="scene-inner">
-        <div className="slate">
+        <Reveal className="slate">
           <strong>Scene 04</strong> The Machine Room · यंत्रशाला
-        </div>
+        </Reveal>
 
-        <h2 className="scene-title">Where the ghosts get their hardware.</h2>
+        <RevealTitle className="scene-title">Where the ghosts get their hardware.</RevealTitle>
 
-        <p className="prose">
+        <Reveal as="p" className="prose">
           At <strong>Datasmith.ai</strong> I shipped the thing every earlier scene was practice
           for: <strong>MHADA-Sathi</strong>, the Government of Maharashtra&rsquo;s multilingual
           agentic chatbot — live at{' '}
@@ -22,21 +24,26 @@ export function Scene4MachineRoom() {
           . I did the GPU capacity planning myself — KV-cache footprint, time-to-first-token,
           tokens-per-second — and defended the numbers that got <strong>4×A100 80GB</strong>{' '}
           approved. Then made them earn it:
-        </p>
+        </Reveal>
 
-        <TypedTerminal />
+        <Reveal>
+          <TypedTerminal />
+        </Reveal>
 
-        <p className="prose">
+        <Reveal as="p" className="prose">
           Chat, vision, speech-to-text and TTS — <strong>four model families on one box</strong>,
           served with vLLM behind network-level routing, for 100+ concurrent users. The reason
           that arithmetic works at all is one beautiful systems idea:
-        </p>
+        </Reveal>
 
-        <KVCachePager />
+        <Reveal>
+          <KVCachePager />
+        </Reveal>
 
         <div className="infra-cards">
-          <a
-            className="infra-card"
+          <Reveal
+            as="a"
+            className="infra-card glow-card"
             href="https://github.com/Adityaa-Sharma/InfraMind"
             target="_blank"
             rel="noreferrer"
@@ -48,8 +55,8 @@ export function Scene4MachineRoom() {
               approve, or auto-remediate.
             </span>
             <span className="infra-card-stack">k8s · helm · prometheus · loki · multi-agent</span>
-          </a>
-          <div className="infra-card infra-card-static">
+          </Reveal>
+          <Reveal className="infra-card infra-card-static glow-card" delay={0.12}>
             <span className="infra-card-name">still going down the stack</span>
             <span className="infra-card-desc">
               Hand-written CUDA kernels (matrix multiply and counting), KinD clusters for K8s
@@ -57,14 +64,14 @@ export function Scene4MachineRoom() {
               contribution.
             </span>
             <span className="infra-card-stack">cuda c++ · kind · vllm internals · ray (next)</span>
-          </div>
+          </Reveal>
         </div>
 
-        <p className="prose scene-beat">
+        <Reveal as="p" className="prose scene-beat">
           The math never left. The plane became embeddings, the eigenvectors became attention,
-          the Q-values became decisions — and now they run with{' '}
+          the action values became decisions — and now they run with{' '}
           <strong>320&nbsp;GB of HBM under their feet</strong>, answering citizens in Marathi.
-        </p>
+        </Reveal>
       </div>
     </section>
   )

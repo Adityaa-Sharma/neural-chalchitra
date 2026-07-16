@@ -1,4 +1,3 @@
-import { Eq } from '../../components/Eq'
 import './EpsilonDecay.css'
 
 /* The exact schedule from DeepQlearning/configs.py:
@@ -33,8 +32,8 @@ export function EpsilonDecay() {
         </text>
       </svg>
       <figcaption>
-        The <Eq tex="\varepsilon" />-greedy schedule: begin by trying everything, end by mostly
-        trusting what you learned — and never stop exploring entirely.
+        The ε-greedy schedule: begin by trying everything, end by mostly trusting what you
+        learned — and never stop exploring entirely.
       </figcaption>
     </figure>
   )
