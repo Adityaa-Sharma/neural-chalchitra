@@ -1,0 +1,106 @@
+.scene-subtitle {
+  font-size: var(--text-xl);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-3);
+}
+
+.spec-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+  margin-block: var(--space-5);
+}
+
+@media (max-width: 800px) {
+  .spec-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.plot-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-raised);
+}
+
+.plot-card img {
+  width: 100%;
+}
+
+.plot-card figcaption {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+  border-top: 1px solid var(--line);
+}
+
+.spec-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  padding: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.spec-card-title {
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--space-2);
+}
+
+.spec-item {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-1);
+}
+
+.spec-item dt {
+  color: var(--ink-faint);
+}
+
+.spec-item dd {
+  color: var(--ink);
+  text-align: right;
+}
+
+.linformer-eqs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: var(--space-4);
+  margin-block: var(--space-4);
+}
+
+.linformer-eqs > div {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  padding: var(--space-3);
+  text-align: center;
+}
+
+.linformer-eqs .katex-display {
+  margin: 0 0 var(--space-2);
+}
+
+.eq-tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.eq-tag-n2 {
+  color: var(--slate-red);
+}
+
+.eq-tag-n {
+  color: var(--teal);
+}

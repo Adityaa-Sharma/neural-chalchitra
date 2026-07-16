@@ -1,0 +1,63 @@
+.attn-formula-block {
+  margin-block: var(--space-5);
+}
+
+.attn-sticky {
+  position: sticky;
+  top: 12vh;
+  z-index: 2;
+  padding: var(--space-3);
+  text-align: center;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.attn-formula .katex-display {
+  margin: 0;
+  font-size: clamp(1rem, 0.6rem + 2vw, 1.7rem);
+}
+
+/* Spotlight machinery: tagged terms dim unless active */
+.t-q,
+.t-k,
+.t-scale,
+.t-soft,
+.t-v {
+  transition: opacity 0.35s, color 0.35s;
+}
+
+[data-active='q'] .attn-formula :is(.t-k, .t-scale, .t-soft, .t-v),
+[data-active='k'] .attn-formula :is(.t-scale, .t-soft, .t-v),
+[data-active='scale'] .attn-formula :is(.t-q, .t-k, .t-v),
+[data-active='v'] .attn-formula :is(.t-q, .t-k, .t-scale, .t-soft) {
+  opacity: 0.25;
+}
+
+[data-active='q'] .attn-formula .t-q,
+[data-active='k'] .attn-formula :is(.t-q, .t-k),
+[data-active='scale'] .attn-formula :is(.t-scale, .t-soft),
+[data-active='v'] .attn-formula .t-v {
+  color: var(--gold);
+}
+
+.attn-steps {
+  max-width: var(--prose-max);
+  margin-top: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: 38vh;
+  padding-bottom: 20vh;
+}
+
+.attn-step h3 {
+  font-size: var(--text-xl);
+  color: var(--ink);
+  margin-bottom: var(--space-2);
+}
+
+.attn-step p {
+  color: var(--ink-dim);
+  font-size: var(--text-lg);
+}
