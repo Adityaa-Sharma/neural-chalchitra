@@ -1,0 +1,111 @@
+.title-card {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 118%, color-mix(in srgb, var(--gold-deep) 14%, transparent), transparent),
+    var(--bg);
+}
+
+.title-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: var(--space-5);
+}
+
+.title-deva {
+  font-family: var(--font-deva);
+  font-weight: 600;
+  font-size: var(--text-xl);
+  color: var(--gold);
+  margin-bottom: var(--space-2);
+}
+
+.title-main {
+  font-size: var(--text-hero);
+  font-weight: 620;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-4);
+}
+
+.title-sub {
+  color: var(--ink-dim);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-4);
+}
+
+.title-sub em {
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+
+.title-tagline {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-style: italic;
+  color: var(--ink);
+  max-width: 34ch;
+  margin-bottom: var(--space-5);
+}
+
+.title-index {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.title-index a {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.title-index a:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.index-n {
+  color: var(--gold-deep);
+  font-size: var(--text-xs);
+}
+
+.title-cue {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cue-arrow {
+    display: inline-block;
+    animation: cue-bob 1.6s ease-in-out infinite;
+  }
+
+  @keyframes cue-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+}
