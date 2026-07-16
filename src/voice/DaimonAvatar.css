@@ -1,120 +1,231 @@
+@property --daimon-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
 .daimon {
   --level: 0;
   position: relative;
   display: grid;
   place-items: center;
+  contain: layout paint;
 }
 
-.daimon svg {
+/* soft glow that reads the orb against near-black */
+.daimon-aura {
+  position: absolute;
+  inset: -28%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--gold) 40%, transparent),
+    color-mix(in srgb, var(--teal) 14%, transparent) 58%,
+    transparent 74%
+  );
+  filter: blur(11px);
+  opacity: 0.7;
+  z-index: 0;
+}
+
+.daimon-disc {
+  position: relative;
   width: 100%;
   height: 100%;
-  overflow: visible;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #171310;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  z-index: 1;
+  transform: scale(calc(1 + var(--level) * 0.11));
 }
 
-.daimon-orb {
-  fill: color-mix(in srgb, var(--gold) 24%, var(--bg-panel));
-  stroke: var(--gold);
-  stroke-width: 1.5;
+/* rotating conic sheen — the iridescence */
+.daimon-sheen {
+  position: absolute;
+  inset: -22%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from var(--daimon-angle),
+    #e8b44f,
+    #d4863a 25%,
+    #63d8c6 50%,
+    #2a8f85 66%,
+    #e8b44f 100%
+  );
+  filter: blur(9px);
+  opacity: 0.55;
+  mix-blend-mode: screen;
 }
 
-.daimon-ring {
-  fill: none;
-  stroke: color-mix(in srgb, var(--gold) 45%, transparent);
-  stroke-width: 1;
-  transform-origin: center;
-  transform: scale(calc(0.92 + var(--level) * 0.35));
-  opacity: calc(0.35 + var(--level) * 0.65);
-  transition: opacity 0.2s;
+/* counter-orbiting blobs, desynced periods so it never visibly repeats */
+.daimon-blob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 46%;
+  height: 46%;
+  margin: -23% 0 0 -23%;
+  border-radius: 50%;
+  filter: blur(7px);
+  mix-blend-mode: screen;
+  will-change: transform;
 }
 
-.daimon-eye {
-  fill: var(--gold);
-  transform-origin: center;
+.daimon-blob-gold {
+  background: radial-gradient(circle, #fff4dc, #e8b44f 70%);
 }
 
-.daimon-mouth rect {
-  fill: var(--gold);
+.daimon-blob-teal {
+  background: radial-gradient(circle, #8ff0e2, #2a8f85 72%);
+}
+
+/* molten off-center highlight */
+.daimon-core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 34% 30%,
+    #fff4dc,
+    color-mix(in srgb, var(--gold) 65%, transparent) 34%,
+    transparent 64%
+  );
+}
+
+/* thinking sweep */
+.daimon-shimmer {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, #fff4dc 55%, transparent) 50%,
+    transparent 70%
+  );
   opacity: 0;
-  transform-origin: center 44.5px;
+  transform: translateX(-60%);
 }
 
-.daimon-orbit circle {
-  fill: var(--gold);
-  opacity: 0;
+/* crisp face above every blurred layer */
+.daimon-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
 }
 
-/* ————— states ————— */
-
-@media (prefers-reduced-motion: no-preference) {
-  /* idle: slow breath + occasional blink */
-  .daimon-idle .daimon-orb {
-    animation: daimon-breathe 4.5s ease-in-out infinite;
-  }
-
-  .daimon-idle .daimon-eye {
-    animation: daimon-blink 5.2s infinite;
-  }
-
-  .daimon-thinking .daimon-orbit {
-    transform-origin: center;
-    animation: daimon-orbit 1.6s linear infinite;
-  }
-
-  .daimon-speaking .daimon-mouth rect {
-    animation: daimon-babble 0.42s ease-in-out infinite;
-  }
-
-  .daimon-speaking .daimon-mouth rect:nth-child(2) {
-    animation-delay: 0.14s;
-  }
-
-  .daimon-speaking .daimon-mouth rect:nth-child(3) {
-    animation-delay: 0.28s;
-  }
+.daimon-eye rect {
+  fill: #0b0a08;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
-.daimon-listening .daimon-eye {
-  transform: scaleY(1.25);
-}
-
-.daimon-thinking .daimon-orbit circle {
+.daimon-catch {
+  fill: #fff4dc;
   opacity: 0.9;
 }
 
+/* ————— motion ————— */
+
+@media (prefers-reduced-motion: no-preference) {
+  .daimon-aura {
+    animation: daimon-breathe 4.2s ease-in-out infinite;
+  }
+
+  .daimon-sheen {
+    animation: daimon-spin 9s linear infinite;
+  }
+
+  .daimon-blob-gold {
+    animation: daimon-orbit-1 7s linear infinite;
+  }
+
+  .daimon-blob-teal {
+    animation: daimon-orbit-2 9.5s linear infinite;
+  }
+
+  .daimon-idle .daimon-eye rect,
+  .daimon-speaking .daimon-eye rect {
+    animation: daimon-blink 5.4s infinite;
+  }
+
+  .daimon-idle .daimon-eye:last-child rect {
+    animation-duration: 7.1s;
+  }
+
+  .daimon-thinking .daimon-sheen {
+    animation-duration: 3.4s;
+  }
+
+  .daimon-thinking .daimon-shimmer {
+    animation: daimon-sweep 1.3s ease-in-out infinite;
+  }
+}
+
+/* speaking: happy squint */
+.daimon-speaking .daimon-eye rect {
+  transform: scaleY(0.6);
+}
+
+/* thinking: gaze drifts up */
 .daimon-thinking .daimon-eyes {
-  transform: translateY(1px);
+  transform: translateY(-1.5px);
 }
 
-.daimon-speaking .daimon-mouth rect {
-  opacity: 1;
-  transform: scaleY(calc(0.6 + var(--level) * 1.6));
+/* error */
+.daimon-error .daimon-disc {
+  border-color: var(--slate-red);
 }
 
-.daimon-error .daimon-orb {
-  stroke: var(--slate-red);
-  fill: color-mix(in srgb, var(--slate-red) 18%, var(--bg-panel));
+.daimon-error .daimon-aura {
+  background: radial-gradient(circle, color-mix(in srgb, var(--slate-red) 40%, transparent), transparent 72%);
 }
 
-.daimon-error .daimon-eye {
-  fill: var(--slate-red);
-  transform: scaleY(0.45);
+.daimon-error .daimon-eye rect {
+  transform: scaleY(0.4);
 }
 
 @keyframes daimon-breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.04); }
+  0%, 100% { opacity: 0.55; transform: scale(0.97); }
+  50% { opacity: 0.92; transform: scale(1.05); }
+}
+
+@keyframes daimon-spin {
+  to { --daimon-angle: 360deg; }
+}
+
+@keyframes daimon-orbit-1 {
+  from { transform: rotate(0deg) translateX(9px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(9px) rotate(-360deg); }
+}
+
+@keyframes daimon-orbit-2 {
+  from { transform: rotate(180deg) translateX(7px) rotate(-180deg); }
+  to { transform: rotate(540deg) translateX(7px) rotate(-540deg); }
 }
 
 @keyframes daimon-blink {
   0%, 92%, 100% { transform: scaleY(1); }
-  95% { transform: scaleY(0.08); }
+  96% { transform: scaleY(0.08); }
 }
 
-@keyframes daimon-orbit {
-  to { transform: rotate(360deg); }
+@keyframes daimon-sweep {
+  0% { opacity: 0; transform: translateX(-60%); }
+  50% { opacity: 0.8; }
+  100% { opacity: 0; transform: translateX(60%); }
 }
 
-@keyframes daimon-babble {
-  0%, 100% { transform: scaleY(0.7); }
-  50% { transform: scaleY(1.5); }
+/* @property isn't universal — fall back to spinning the element itself */
+@supports not (background: conic-gradient(from var(--daimon-angle), red, blue)) {
+  @media (prefers-reduced-motion: no-preference) {
+    .daimon-sheen {
+      animation: daimon-spin-fallback 9s linear infinite;
+    }
+  }
+  @keyframes daimon-spin-fallback {
+    to { transform: rotate(360deg); }
+  }
 }

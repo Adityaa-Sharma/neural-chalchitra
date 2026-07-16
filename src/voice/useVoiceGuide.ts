@@ -2,43 +2,33 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { VOICE_PROXY_URL, matchLocalIntent } from './voiceConfig'
 import { scrollToSection } from '../lib/scrollNav'
 
-export type VoiceState = 'idle' | 'listening' | 'thinking' | 'speaking' | 'error'
+export type VoiceState = 'idle' | 'thinking' | 'speaking' | 'error'
 
 export interface Exchange {
-  transcript?: string
+  question?: string
   reply?: string
   note?: string
 }
 
-const MAX_RECORD_MS = 18_000
-
-function pickMime(): string {
-  const candidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4']
-  for (const c of candidates) {
-    if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(c)) return c
-  }
-  return ''
-}
-
+/** Typed-input guide: question text → Worker (Sarvam chat + TTS) → spoken,
+ *  Indian-voiced reply + a scroll action. No microphone — by design. */
 export function useVoiceGuide() {
   const [state, setState] = useState<VoiceState>('idle')
   const [exchange, setExchange] = useState<Exchange>({})
   const levelRef = useRef(0)
 
   const audioCtxRef = useRef<AudioContext | null>(null)
-  const analyserRef = useRef<AnalyserNode | null>(null)
   const rafRef = useRef(0)
-  const recorderRef = useRef<MediaRecorder | null>(null)
-  const streamRef = useRef<MediaStream | null>(null)
   const sourceRef = useRef<AudioBufferSourceNode | null>(null)
-  const stopTimerRef = useRef(0)
 
   const configured = VOICE_PROXY_URL.length > 0
 
-  // meter loop: RMS of the analyser feeds levelRef (avatar reads it via rAF)
-  const meter = useCallback(() => {
-    const analyser = analyserRef.current
-    if (!analyser) return
+  const stopMeter = useCallback(() => {
+    cancelAnimationFrame(rafRef.current)
+    levelRef.current = 0
+  }, [])
+
+  const meter = useCallback((analyser: AnalyserNode) => {
     const data = new Uint8Array(analyser.frequencyBinCount)
     const loop = () => {
       analyser.getByteFrequencyData(data)
@@ -50,21 +40,15 @@ export function useVoiceGuide() {
     rafRef.current = requestAnimationFrame(loop)
   }, [])
 
-  const stopMeter = useCallback(() => {
-    cancelAnimationFrame(rafRef.current)
-    levelRef.current = 0
-  }, [])
-
+  /** Create/resume the AudioContext synchronously inside a user gesture —
+   *  required for iOS to allow the later TTS playback. */
   const ensureCtx = useCallback(() => {
-    if (!audioCtxRef.current) {
-      audioCtxRef.current = new AudioContext()
-    }
-    // must be resumed synchronously inside the user gesture (iOS)
+    if (!audioCtxRef.current) audioCtxRef.current = new AudioContext()
     if (audioCtxRef.current.state === 'suspended') void audioCtxRef.current.resume()
     return audioCtxRef.current
   }, [])
 
-  const stopPlayback = useCallback(() => {
+  const stopSpeaking = useCallback(() => {
     try {
       sourceRef.current?.stop()
     } catch {
@@ -72,12 +56,8 @@ export function useVoiceGuide() {
     }
     sourceRef.current = null
     stopMeter()
+    setState('idle')
   }, [stopMeter])
-
-  const releaseMic = useCallback(() => {
-    streamRef.current?.getTracks().forEach((t) => t.stop())
-    streamRef.current = null
-  }, [])
 
   const act = useCallback((action: string | undefined) => {
     if (!action || action === 'none') return
@@ -96,161 +76,96 @@ export function useVoiceGuide() {
       src.buffer = buffer
       src.connect(analyser)
       analyser.connect(ctx.destination)
-      analyserRef.current = analyser
       sourceRef.current = src
       src.onended = () => {
         stopMeter()
         onDone()
       }
       src.start()
-      meter()
+      meter(analyser)
     },
     [ensureCtx, meter, stopMeter],
-  )
-
-  const handleResponse = useCallback(
-    async (payload: { transcript?: string; speech?: string; action?: string; audio?: string }) => {
-      setExchange({ transcript: payload.transcript, reply: payload.speech })
-      act(payload.action)
-      if (payload.audio) {
-        setState('speaking')
-        try {
-          await playBase64Wav(payload.audio, () => setState('idle'))
-          return
-        } catch {
-          /* fall through to silent finish */
-        }
-      }
-      setState('idle')
-    },
-    [act, playBase64Wav],
   )
 
   const fallback = useCallback(
     (text: string, note: string) => {
       const intent = matchLocalIntent(text)
       if (intent) {
-        setExchange({ transcript: text, reply: intent.speech, note })
+        setExchange({ question: text, reply: intent.speech, note })
         act(intent.action)
         setState('idle')
       } else {
-        setExchange({ transcript: text, note })
+        setExchange({ question: text, note })
         setState('error')
       }
     },
     [act],
   )
 
-  const send = useCallback(
-    async (body: FormData | { text: string }) => {
+  const ask = useCallback(
+    async (text: string) => {
+      const question = text.trim().slice(0, 400)
+      if (!question || state === 'thinking') return
+      ensureCtx() // inside the submit gesture
+      try {
+        sourceRef.current?.stop()
+      } catch {
+        /* nothing playing */
+      }
+      setExchange({ question })
       setState('thinking')
-      const isForm = body instanceof FormData
-      const text = isForm ? '' : body.text
+
       if (!configured) {
-        fallback(text, 'voice brain not deployed yet — keyword navigation only')
+        fallback(question, 'voice brain not deployed yet — keyword navigation only')
         return
       }
+
       try {
         const res = await fetch(`${VOICE_PROXY_URL}/voice`, {
           method: 'POST',
-          ...(isForm
-            ? { body }
-            : { headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }),
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ text: question }),
         })
         if (!res.ok) {
           fallback(
-            text,
+            question,
             res.status === 429
               ? 'the daimon is catching its breath — try again in a minute'
               : `guide hit a snag (${res.status}) — navigating locally`,
           )
           return
         }
-        await handleResponse(await res.json())
-      } catch {
-        fallback(text, 'guide unreachable — navigating locally')
-      }
-    },
-    [configured, fallback, handleResponse],
-  )
-
-  const stopListening = useCallback(() => {
-    window.clearTimeout(stopTimerRef.current)
-    recorderRef.current?.state === 'recording' && recorderRef.current.stop()
-  }, [])
-
-  const startListening = useCallback(async () => {
-    ensureCtx()
-    let stream: MediaStream
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-    } catch {
-      setExchange({ note: 'mic permission denied — type your question instead' })
-      setState('error')
-      return
-    }
-    streamRef.current = stream
-    const ctx = ensureCtx()
-    const micSource = ctx.createMediaStreamSource(stream)
-    const analyser = ctx.createAnalyser()
-    analyser.fftSize = 256
-    micSource.connect(analyser)
-    analyserRef.current = analyser
-    meter()
-
-    const mime = pickMime()
-    const rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined)
-    const chunks: Blob[] = []
-    rec.ondataavailable = (e) => e.data.size && chunks.push(e.data)
-    rec.onstop = () => {
-      stopMeter()
-      releaseMic()
-      const blob = new Blob(chunks, { type: rec.mimeType || 'audio/webm' })
-      if (blob.size < 2000) {
+        const payload = await res.json()
+        setExchange({ question, reply: payload.speech || undefined })
+        act(payload.action)
+        if (payload.audio) {
+          setState('speaking')
+          try {
+            await playBase64Wav(payload.audio, () => setState('idle'))
+            return
+          } catch {
+            /* captions still shown */
+          }
+        }
         setState('idle')
-        return
+      } catch {
+        fallback(question, 'guide unreachable — navigating locally')
       }
-      const form = new FormData()
-      form.append('audio', blob, `speech.${blob.type.includes('mp4') ? 'mp4' : 'webm'}`)
-      void send(form)
-    }
-    recorderRef.current = rec
-    rec.start()
-    setState('listening')
-    stopTimerRef.current = window.setTimeout(stopListening, MAX_RECORD_MS)
-  }, [ensureCtx, meter, releaseMic, send, stopListening, stopMeter])
-
-  /** Main orb tap: idle→listen, listening→send, speaking→interrupt. */
-  const toggle = useCallback(() => {
-    if (state === 'listening') {
-      stopListening()
-    } else if (state === 'speaking') {
-      stopPlayback()
-      setState('idle')
-    } else if (state === 'idle' || state === 'error') {
-      void startListening()
-    }
-  }, [state, startListening, stopListening, stopPlayback])
-
-  const ask = useCallback(
-    (text: string) => {
-      const clean = text.trim()
-      if (!clean) return
-      ensureCtx()
-      stopPlayback()
-      void send({ text: clean })
     },
-    [ensureCtx, send, stopPlayback],
+    [state, configured, ensureCtx, fallback, act, playBase64Wav],
   )
 
   useEffect(
     () => () => {
-      stopPlayback()
-      releaseMic()
-      window.clearTimeout(stopTimerRef.current)
+      try {
+        sourceRef.current?.stop()
+      } catch {
+        /* noop */
+      }
+      cancelAnimationFrame(rafRef.current)
     },
-    [stopPlayback, releaseMic],
+    [],
   )
 
-  return { state, exchange, levelRef, toggle, ask, configured }
+  return { state, exchange, levelRef, ask, stopSpeaking, configured }
 }
