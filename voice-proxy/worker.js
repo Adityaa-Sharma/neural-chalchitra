@@ -104,17 +104,32 @@ function json(body, status, origin) {
 }
 
 async function sarvamSTT(audioFile, key) {
-  const form = new FormData()
-  form.append('file', audioFile, audioFile.name || 'speech.webm')
-  form.append('model', 'saaras:v3')
-  form.append('language_code', 'unknown')
-  const res = await fetch(`${SARVAM}/speech-to-text`, {
-    method: 'POST',
-    headers: { 'api-subscription-key': key },
-    body: form,
-  })
-  if (!res.ok) throw new Error(`stt ${res.status}`)
-  return res.json() // { transcript, language_code, ... }
+  // Read once; the same bytes feed each model attempt.
+  const buf = await audioFile.arrayBuffer()
+  const type = audioFile.type || 'audio/webm'
+  const name = audioFile.name || 'speech.webm'
+
+  // Try the current model, then the widely-available legacy one. Surfaces the
+  // real Sarvam error text so failures are diagnosable, not "lost the thread".
+  const attempts = [
+    { model: 'saaras:v3', lang: 'unknown' },
+    { model: 'saarika:v2.5', lang: 'unknown' },
+  ]
+  let lastErr = ''
+  for (const { model, lang } of attempts) {
+    const form = new FormData()
+    form.append('file', new Blob([buf], { type }), name)
+    form.append('model', model)
+    form.append('language_code', lang)
+    const res = await fetch(`${SARVAM}/speech-to-text`, {
+      method: 'POST',
+      headers: { 'api-subscription-key': key },
+      body: form,
+    })
+    if (res.ok) return res.json() // { transcript, language_code, ... }
+    lastErr = `${model} → ${res.status} ${(await res.text()).slice(0, 200)}`
+  }
+  throw new Error(`stt ${lastErr}`)
 }
 
 async function chatOnce(userText, key, maxTokens) {
