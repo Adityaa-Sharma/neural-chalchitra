@@ -118,7 +118,18 @@ export function useVoiceGuide() {
       form.append('audio', blob, `speech.${blob.type.includes('mp4') ? 'mp4' : 'webm'}`)
       try {
         const res = await fetch(`${VOICE_PROXY_URL}/voice`, { method: 'POST', body: form })
-        if (!res.ok) throw new Error(String(res.status))
+        if (!res.ok) {
+          let msg = `voice error ${res.status}`
+          try {
+            const e = await res.json()
+            if (e?.error) msg = e.error
+          } catch {
+            /* non-JSON error body */
+          }
+          setExchange((ex) => ({ ...ex, note: msg }))
+          setState('error')
+          return
+        }
         const p = await res.json()
         const heard = (p.transcript ?? '').trim()
         if (!heard) {
