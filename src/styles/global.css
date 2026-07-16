@@ -1,0 +1,125 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 560;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+a {
+  color: var(--gold);
+  text-decoration-color: color-mix(in srgb, var(--gold) 40%, transparent);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  text-decoration-color: var(--gold);
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--gold) 30%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Every scene is a full film frame */
+.scene {
+  position: relative;
+  min-height: 100vh;
+  padding: var(--space-6) var(--scene-pad-x);
+}
+
+.scene-inner {
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+/* Scene slate: "SCENE 01 — शीर्षक" marker */
+.slate {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: var(--space-4);
+}
+
+.slate::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.slate strong {
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.prose {
+  max-width: var(--prose-max);
+  color: var(--ink-dim);
+  font-size: var(--text-lg);
+}
+
+.prose strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Motion is a progressive enhancement, never a requirement */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

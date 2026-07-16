@@ -1,0 +1,16 @@
+.film-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 60;
+  background: color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+.film-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+  transform: scaleX(0);
+  transform-origin: left center;
+}
