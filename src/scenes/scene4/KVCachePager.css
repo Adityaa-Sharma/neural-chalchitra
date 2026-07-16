@@ -1,0 +1,98 @@
+.kv-pager {
+  margin-block: var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  padding: var(--space-4);
+}
+
+.kv-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+}
+
+.kv-title {
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+.kv-frame-title {
+  color: var(--ink-dim);
+}
+
+.kv-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+}
+
+.kv-block {
+  aspect-ratio: 1.6;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  transition: background 0.5s, border-color 0.5s, box-shadow 0.5s;
+}
+
+.kv-block.kv-a {
+  background: color-mix(in srgb, var(--gold) 55%, var(--bg));
+  border-color: var(--gold);
+}
+
+.kv-block.kv-b {
+  background: color-mix(in srgb, var(--teal) 45%, var(--bg));
+  border-color: var(--teal);
+}
+
+.kv-block.kv-c {
+  background: color-mix(in srgb, var(--slate-red) 55%, var(--bg));
+  border-color: var(--slate-red);
+}
+
+.kv-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+}
+
+.kv-chip {
+  display: inline-block;
+  width: 12px;
+  height: 9px;
+  border-radius: 2px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  margin-right: 5px;
+}
+
+.kv-chip.kv-a {
+  background: color-mix(in srgb, var(--gold) 55%, var(--bg));
+  border-color: var(--gold);
+}
+
+.kv-chip.kv-b {
+  background: color-mix(in srgb, var(--teal) 45%, var(--bg));
+  border-color: var(--teal);
+}
+
+.kv-chip.kv-c {
+  background: color-mix(in srgb, var(--slate-red) 55%, var(--bg));
+  border-color: var(--slate-red);
+}
+
+.kv-pager figcaption {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+  max-width: 60ch;
+}
