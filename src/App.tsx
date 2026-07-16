@@ -31,6 +31,18 @@ function SceneFallback() {
   return <div className="scene" aria-hidden="true" />
 }
 
+/* Mounts only after every lazy scene has resolved (it sits last inside the
+   Suspense boundary), so trigger positions are recomputed against the real
+   page height — again once the webfonts settle. */
+function RefreshTriggers() {
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => ScrollTrigger.refresh())
+    document.fonts?.ready.then(() => ScrollTrigger.refresh())
+    return () => cancelAnimationFrame(raf)
+  }, [])
+  return null
+}
+
 function App() {
   const reducedMotion = usePrefersReducedMotion()
 
@@ -52,12 +64,6 @@ function App() {
     }
   }, [reducedMotion])
 
-  // lazy chunks change the page height as they land — recompute trigger positions
-  useEffect(() => {
-    const id = window.setTimeout(() => ScrollTrigger.refresh(), 900)
-    return () => window.clearTimeout(id)
-  }, [])
-
   return (
     <>
       <FilmProgress />
@@ -69,6 +75,7 @@ function App() {
           <Scene3Agent />
           <Scene4MachineRoom />
           <Credits />
+          <RefreshTriggers />
         </Suspense>
       </main>
       <GrainOverlay />

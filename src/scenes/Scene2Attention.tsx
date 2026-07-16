@@ -45,6 +45,8 @@ export function Scene2Attention() {
               src={asset('assets/gpt2/character_tokenized_model_loss.png')}
               alt="Training and validation loss of the character-level GPT-2"
               loading="lazy"
+              width={3572}
+              height={1900}
             />
             <figcaption>
               The actual loss curve — five epochs, lr 6·10⁻⁴, batch 64, block size 256, all of it
@@ -93,6 +95,8 @@ export function Scene2Attention() {
               src={asset('assets/linformer/val_loss.png')}
               alt="Linformer validation loss"
               loading="lazy"
+              width={1000}
+              height={500}
             />
             <figcaption>Linformer validation loss — it learns.</figcaption>
           </figure>
@@ -101,6 +105,8 @@ export function Scene2Attention() {
               src={asset('assets/linformer/loss_ratio.png')}
               alt="Loss ratio between Linformer and baseline attention"
               loading="lazy"
+              width={1000}
+              height={500}
             />
             <figcaption>
               …and the ratio against full attention tells the honest story.{' '}

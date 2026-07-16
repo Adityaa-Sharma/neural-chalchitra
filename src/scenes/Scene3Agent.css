@@ -32,6 +32,7 @@
 .arcade-screen img {
   image-rendering: pixelated;
   width: min(100%, 320px);
+  height: auto;
   margin-inline: auto;
 }
 

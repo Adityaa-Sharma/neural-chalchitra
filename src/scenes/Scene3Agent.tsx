@@ -53,6 +53,8 @@ export function Scene3Agent() {
               <img
                 src={asset('assets/dqn/DQN_Agent.gif')}
                 alt="The trained DQN agent playing Atari Breakout"
+                width={160}
+                height={210}
               />
             </div>
             <figcaption>
@@ -80,6 +82,8 @@ export function Scene3Agent() {
               src={asset('assets/dqn/training_metrics.png')}
               alt="DQN training metrics: loss, reward, Q-values, epsilon"
               loading="lazy"
+              width={3000}
+              height={4500}
             />
             <figcaption>Training: Huber loss, reward per episode, mean Q, ε decay.</figcaption>
           </figure>
@@ -88,6 +92,8 @@ export function Scene3Agent() {
               src={asset('assets/dqn/evaluation_metrics.png')}
               alt="DQN evaluation metrics"
               loading="lazy"
+              width={3000}
+              height={3000}
             />
             <figcaption>Evaluation: the Q-values learned to mean something.</figcaption>
           </figure>
