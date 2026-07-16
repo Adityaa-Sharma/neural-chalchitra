@@ -1,7 +1,7 @@
 /** URL of the deployed Cloudflare Worker from voice-proxy/ (empty = voice off,
  *  the daimon still navigates via typed keywords). Example:
  *  'https://neural-chalchitra-voice.your-account.workers.dev' */
-export const VOICE_PROXY_URL = ''
+export const VOICE_PROXY_URL = 'https://neural-chalchitra-voice.mailmeifyoucan7.workers.dev'
 
 /** Section ids the guide can navigate to (must match scene ids in App). */
 export const SECTIONS: Record<string, string> = {

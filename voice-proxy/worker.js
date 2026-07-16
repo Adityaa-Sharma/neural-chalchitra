@@ -55,6 +55,7 @@ THE FILM'S SCENES (navigation targets):
 title (opening) · mathematics (scene 1: eigenvectors, grid morph) · attention (scene 2: his GPT-2 + attention visualizer + Linformer) · agent (scene 3: DQN Breakout) · machine-room (scene 4: vLLM/A100 production) · credits (experience, photo, contact).
 
 RULES:
+- Think very briefly — a few lines of private reasoning at most, then answer.
 - Reply in the user's language (Hindi, Marathi, or English — mirror them).
 - speech: at most 2 short sentences, under ${MAX_SPEECH_CHARS} characters. It will be spoken aloud.
 - If they ask to see something, set the matching scroll action and describe it in one line.
@@ -114,7 +115,7 @@ async function sarvamSTT(audioFile, key) {
   return res.json() // { transcript, language_code, ... }
 }
 
-async function sarvamChat(userText, key) {
+async function chatOnce(userText, key, maxTokens) {
   const res = await fetch(`${SARVAM}/v1/chat/completions`, {
     method: 'POST',
     headers: { 'api-subscription-key': key, 'content-type': 'application/json' },
@@ -125,18 +126,45 @@ async function sarvamChat(userText, key) {
         { role: 'user', content: userText },
       ],
       temperature: 0.4,
-      max_tokens: 400,
+      // sarvam-30b reasons before answering; keep that short or it burns the
+      // whole token budget in reasoning_content and returns empty content
+      reasoning_effort: 'low',
+      max_tokens: maxTokens,
       response_format: RESPONSE_SCHEMA,
     }),
   })
   if (!res.ok) throw new Error(`chat ${res.status}`)
   const data = await res.json()
-  let parsed
+  return repairParse(data.choices?.[0]?.message?.content ?? '')
+}
+
+/** Parse the model's JSON, salvaging fields from output truncated by
+ *  finish_reason: length — Indic reasoning often overruns the budget with a
+ *  perfectly good "speech" already emitted. */
+function repairParse(content) {
   try {
-    parsed = JSON.parse(data.choices?.[0]?.message?.content ?? '{}')
+    return JSON.parse(content)
   } catch {
-    parsed = {}
+    const field = (name) => {
+      const m = content.match(new RegExp(`"${name}"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)`))
+      if (!m) return undefined
+      try {
+        return JSON.parse(`"${m[1]}"`)
+      } catch {
+        return m[1]
+      }
+    }
+    const speech = field('speech')
+    return speech ? { speech, action: field('action'), language: field('language') } : null
   }
+}
+
+async function sarvamChat(userText, key) {
+  // the budget is mostly reasoning_content — Hindi/Marathi queries reason
+  // 3-4x longer than English. Starter tier caps max_tokens at 4096.
+  let parsed = await chatOnce(userText, key, 4000)
+  if (!parsed?.speech) parsed = await chatOnce(userText, key, 4000)
+  parsed = parsed ?? {}
   return {
     speech: String(parsed.speech ?? '').slice(0, MAX_SPEECH_CHARS),
     action: ACTIONS.includes(parsed.action) ? parsed.action : 'none',
