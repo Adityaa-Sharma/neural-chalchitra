@@ -14,13 +14,69 @@ export interface Exchange {
 const SPEAK_ON = 0.09 // level that counts as "the visitor is talking"
 const SILENCE_MS = 1400 // hang-up after this much quiet once they've spoken
 const MAX_TURN_MS = 14_000 // hard cap per turn
-const MIN_BLOB = 2400 // ignore near-empty recordings
+const MIN_SPEECH_S = 0.35 // ignore turns shorter than this
+const OUT_RATE = 16_000 // Sarvam transcribes best at 16 kHz mono
 
-function pickMime(): string {
-  for (const c of ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4']) {
-    if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(c)) return c
+/* We record raw PCM and encode WAV ourselves. MediaRecorder's WebM/Opus ships
+ * without a duration header, which Sarvam's decoder rejects — but a clean WAV
+ * (proven to work by curl) transcribes every time. */
+
+function mergeFloat32(chunks: Float32Array[], length: number): Float32Array {
+  const out = new Float32Array(length)
+  let offset = 0
+  for (const c of chunks) {
+    out.set(c, offset)
+    offset += c.length
   }
-  return ''
+  return out
+}
+
+function downsample(buffer: Float32Array, inRate: number, outRate: number): Float32Array {
+  if (outRate >= inRate) return buffer
+  const ratio = inRate / outRate
+  const outLen = Math.round(buffer.length / ratio)
+  const out = new Float32Array(outLen)
+  let iOut = 0
+  let iIn = 0
+  while (iOut < outLen) {
+    const next = Math.round((iOut + 1) * ratio)
+    let sum = 0
+    let count = 0
+    for (let i = iIn; i < next && i < buffer.length; i++) {
+      sum += buffer[i]
+      count++
+    }
+    out[iOut++] = count ? sum / count : 0
+    iIn = next
+  }
+  return out
+}
+
+function encodeWav(samples: Float32Array, sampleRate: number): Blob {
+  const buffer = new ArrayBuffer(44 + samples.length * 2)
+  const view = new DataView(buffer)
+  const str = (off: number, s: string) => {
+    for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i))
+  }
+  str(0, 'RIFF')
+  view.setUint32(4, 36 + samples.length * 2, true)
+  str(8, 'WAVE')
+  str(12, 'fmt ')
+  view.setUint32(16, 16, true)
+  view.setUint16(20, 1, true) // PCM
+  view.setUint16(22, 1, true) // mono
+  view.setUint32(24, sampleRate, true)
+  view.setUint32(28, sampleRate * 2, true)
+  view.setUint16(32, 2, true)
+  view.setUint16(34, 16, true)
+  str(36, 'data')
+  view.setUint32(40, samples.length * 2, true)
+  let off = 44
+  for (let i = 0; i < samples.length; i++, off += 2) {
+    const s = Math.max(-1, Math.min(1, samples[i]))
+    view.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true)
+  }
+  return new Blob([view], { type: 'audio/wav' })
 }
 
 /** Hands-free voice guide. First gesture greets in Aditya's voice, then loops:
@@ -33,8 +89,8 @@ export function useVoiceGuide() {
   const ctxRef = useRef<AudioContext | null>(null)
   const rafRef = useRef(0)
   const sourceRef = useRef<AudioBufferSourceNode | null>(null)
-  const recRef = useRef<MediaRecorder | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
+  const captureStopRef = useRef<(() => void) | null>(null) // finalize current turn
   const activeRef = useRef(false) // conversation open → keep the loop going
   const emptyTurnsRef = useRef(0)
   const greetedRef = useRef(false) // greet only the first time
@@ -115,7 +171,7 @@ export function useVoiceGuide() {
     async (blob: Blob) => {
       setState('thinking')
       const form = new FormData()
-      form.append('audio', blob, `speech.${blob.type.includes('mp4') ? 'mp4' : 'webm'}`)
+      form.append('audio', blob, 'speech.wav')
       try {
         const res = await fetch(`${VOICE_PROXY_URL}/voice`, { method: 'POST', body: form })
         if (!res.ok) {
@@ -178,25 +234,58 @@ export function useVoiceGuide() {
     micSrc.connect(analyser)
     const data = new Uint8Array(analyser.frequencyBinCount)
 
-    const rec = new MediaRecorder(stream, pickMime() ? { mimeType: pickMime() } : undefined)
-    const chunks: Blob[] = []
-    rec.ondataavailable = (e) => e.data.size && chunks.push(e.data)
-    rec.onstop = () => {
-      stopMeter()
+    // raw PCM capture (mono) — encoded to WAV on stop
+    const processor = ctx.createScriptProcessor(4096, 1, 1)
+    const mute = ctx.createGain()
+    mute.gain.value = 0
+    micSrc.connect(processor)
+    processor.connect(mute)
+    mute.connect(ctx.destination)
+
+    const pcm: Float32Array[] = []
+    let pcmLen = 0
+    processor.onaudioprocess = (e) => {
+      const ch = e.inputBuffer.getChannelData(0)
+      pcm.push(new Float32Array(ch)) // copy — the buffer is reused
+      pcmLen += ch.length
+    }
+
+    let finalized = false
+    const finish = () => {
+      if (finalized) return
+      finalized = true
+      captureStopRef.current = null
+      cancelAnimationFrame(rafRef.current)
+      processor.disconnect()
+      mute.disconnect()
+      micSrc.disconnect()
+      analyser.disconnect()
       releaseMic()
-      const blob = new Blob(chunks, { type: rec.mimeType || 'audio/webm' })
-      if (blob.size < MIN_BLOB) {
-        if (activeRef.current) {
-          emptyTurnsRef.current += 1
-          if (emptyTurnsRef.current < 2) listen()
-          else setState('idle')
-        } else setState('idle')
+      levelRef.current = 0
+
+      // conversation was closed while listening — discard, don't send
+      if (!activeRef.current) {
+        setState('idle')
         return
       }
-      void send(blob)
+
+      const seconds = pcmLen / ctx.sampleRate
+      if (seconds < MIN_SPEECH_S) {
+        // heard nothing — give one more try, then rest
+        if (activeRef.current && emptyTurnsRef.current < 1) {
+          emptyTurnsRef.current += 1
+          listenRef.current()
+        } else {
+          emptyTurnsRef.current = 0
+          setState('idle')
+        }
+        return
+      }
+      const merged = mergeFloat32(pcm, pcmLen)
+      const wav = encodeWav(downsample(merged, ctx.sampleRate, OUT_RATE), OUT_RATE)
+      void send(wav)
     }
-    recRef.current = rec
-    rec.start()
+    captureStopRef.current = finish
     setState('listening')
 
     // VAD: stop after sustained silence once speech has been heard
@@ -204,7 +293,7 @@ export function useVoiceGuide() {
     let heardSpeech = false
     let quietSince = 0
     const tick = () => {
-      if (!recRef.current || recRef.current.state !== 'recording') return
+      if (finalized) return
       analyser.getByteFrequencyData(data)
       let s = 0
       for (const v of data) s += v * v
@@ -216,15 +305,9 @@ export function useVoiceGuide() {
         quietSince = 0
       } else if (heardSpeech) {
         if (!quietSince) quietSince = now
-        else if (now - quietSince > SILENCE_MS) {
-          rec.stop()
-          return
-        }
+        else if (now - quietSince > SILENCE_MS) return finish()
       }
-      if (now - t0 > MAX_TURN_MS) {
-        rec.stop()
-        return
-      }
+      if (now - t0 > MAX_TURN_MS) return finish()
       rafRef.current = requestAnimationFrame(tick)
     }
     rafRef.current = requestAnimationFrame(tick)
@@ -243,7 +326,7 @@ export function useVoiceGuide() {
   }, [stopMeter])
 
   const stopListening = useCallback(() => {
-    if (recRef.current?.state === 'recording') recRef.current.stop()
+    captureStopRef.current?.()
   }, [])
 
   /** Begin the conversation: Aditya greets, then starts listening. */
