@@ -1,0 +1,163 @@
+.credits {
+  background:
+    radial-gradient(ellipse 75% 50% at 50% -15%, color-mix(in srgb, var(--gold-deep) 10%, transparent), transparent),
+    var(--bg);
+}
+
+.credits-work {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: var(--space-5);
+  margin-block: var(--space-5);
+}
+
+.credits-block h3 {
+  font-size: var(--text-lg);
+  color: var(--gold);
+  margin-bottom: var(--space-3);
+}
+
+.credit-entry {
+  margin-bottom: var(--space-4);
+}
+
+.credit-head {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-1);
+}
+
+.credit-head strong {
+  color: var(--ink);
+  font-size: var(--text-base);
+}
+
+.credit-head span {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+}
+
+.credit-entry p,
+.credit-card p {
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+}
+
+.credit-card {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+  text-decoration: none;
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.credit-card:hover {
+  border-color: var(--gold-deep);
+  transform: translateY(-2px);
+}
+
+.credit-card strong {
+  color: var(--ink);
+}
+
+.credit-card p {
+  margin-block: var(--space-1);
+}
+
+.credit-card span {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+  letter-spacing: 0.1em;
+}
+
+.now-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+}
+
+.now-list li::before {
+  content: '→ ';
+  color: var(--teal);
+}
+
+/* the roll itself */
+.credits-roll {
+  max-width: 44rem;
+  margin: var(--space-6) auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.roll-line {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  align-items: baseline;
+}
+
+.roll-role {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.roll-name {
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+
+.credits-contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-block: var(--space-5);
+}
+
+.credits-contact a {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.credits-contact a:hover {
+  color: var(--gold);
+  border-color: var(--gold-deep);
+}
+
+.credits-end {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--ink);
+  padding-bottom: var(--space-5);
+}
+
+.credits-end span {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+}
