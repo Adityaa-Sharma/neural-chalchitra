@@ -11,6 +11,9 @@
 
 .photo-still img {
   width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 15%;
   height: auto;
   border-radius: 3px;
   filter: grayscale(1) contrast(1.05) brightness(0.95);

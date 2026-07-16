@@ -38,7 +38,7 @@ export function PhotoStill() {
     <figure className="photo-still" ref={ref}>
       <div className="photo-still-frame">
         <img
-          src={asset('me.jpg')}
+          src={asset('assets/me.jpeg')}
           alt="Aditya Sharma"
           width={640}
           height={800}
