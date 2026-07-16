@@ -12,7 +12,9 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  # never cancel an in-flight deploy: if the superseding run fails,
+  # a cancelled deploy would leave the site silently stale
+  cancel-in-progress: false
 
 jobs:
   build:

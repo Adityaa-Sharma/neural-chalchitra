@@ -46,6 +46,11 @@ export function AttentionViz() {
                 y={24}
                 className={`attn-token ${focus === i ? 'is-focus' : ''}`}
                 onMouseEnter={() => setFocus(i)}
+                onFocus={() => setFocus(i)}
+                onBlur={() => setFocus(null)}
+                tabIndex={0}
+                role="button"
+                aria-label={`isolate attention from character ${t === '␣' ? 'space' : t}`}
               >
                 {t}
               </text>

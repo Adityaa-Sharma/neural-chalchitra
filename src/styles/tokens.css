@@ -12,7 +12,7 @@
   --line: #2e2718;
   --ink: #ece7dd;
   --ink-dim: #a89f8c;
-  --ink-faint: #6e675a;
+  --ink-faint: #8a8274; /* ≥4.5:1 on --bg for small mono labels */
   --gold: #e8b44f;
   --gold-deep: #b8860b;
   --teal: #63d8c6;
