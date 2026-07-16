@@ -6,6 +6,7 @@ import Lenis from 'lenis'
 import { GrainOverlay } from './components/GrainOverlay'
 import { FilmProgress } from './components/FilmProgress'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
+import { useGlowCards } from './hooks/useGlowCards'
 
 import { TitleCard } from './scenes/TitleCard'
 
@@ -45,6 +46,7 @@ function RefreshTriggers() {
 
 function App() {
   const reducedMotion = usePrefersReducedMotion()
+  useGlowCards()
 
   // Lenis drives smooth scroll; GSAP's ticker drives Lenis so that
   // ScrollTrigger and scroll position always agree on the same clock.

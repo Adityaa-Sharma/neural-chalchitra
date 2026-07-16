@@ -1,0 +1,53 @@
+/* ————— The responsive layer: felt, not seen ————— */
+
+/* Cursor-aware glow. JS sets --mx/--my per card; ≤10% gold alpha. */
+.glow-card {
+  position: relative;
+}
+
+.glow-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    480px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--gold) 8%, transparent),
+    transparent 42%
+  );
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .glow-card:hover::after {
+    opacity: 1;
+  }
+}
+
+/* Press physics: everything clickable answers back */
+a,
+button {
+  transition: transform 0.14s ease;
+}
+
+a:active,
+button:active {
+  transform: scale(0.97);
+}
+
+/* Hover lift stays subtle: 2-3px, no more */
+.live-clock {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a:active,
+  button:active {
+    transform: none;
+  }
+}

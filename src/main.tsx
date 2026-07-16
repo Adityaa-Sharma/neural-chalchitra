@@ -9,6 +9,7 @@ import '@fontsource/noto-serif-devanagari/600.css'
 
 import './styles/tokens.css'
 import './styles/global.css'
+import './styles/interaction.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
