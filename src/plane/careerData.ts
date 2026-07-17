@@ -245,7 +245,7 @@ export const NODES: PlaneNode[] = [
     y: -0.6,
     period: 'Datasmith.ai · 2024-25 · live at mhada.gov.in',
     blurb:
-      'The Government of Maharashtra&rsquo;s multilingual chatbot, end to end: an 8-tool agent with hybrid RAG; GPU capacity planning I defended myself — KV-cache, TTFT, TPS — for 4×A100 80GB; vLLM serving chat, vision, STT and TTS for 100+ concurrent users, in Marathi.',
+      'The Government of Maharashtra’s multilingual chatbot, end to end: an 8-tool agent with hybrid RAG; GPU capacity planning I defended myself — KV-cache, TTFT, TPS — for 4×A100 80GB; vLLM serving chat, vision, STT and TTS for 100+ concurrent users, in Marathi.',
     stack: ['vllm', 'qwen3-14b-awq', 'whisper', 'redis · celery · qdrant', 'nginx'],
     links: [{ label: 'live ↗', url: 'https://mhada.gov.in/en' }],
     edges: ['career', 'vllm-study'],

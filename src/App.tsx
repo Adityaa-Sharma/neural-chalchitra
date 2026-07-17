@@ -14,20 +14,9 @@ import { TitleCard } from './scenes/TitleCard'
 
 gsap.registerPlugin(ScrollTrigger)
 
-/* Every scene below the fold is its own chunk — KaTeX, Mafs and friends
-   only download when the film actually reaches them. */
-const Scene1Math = lazy(() =>
-  import('./scenes/Scene1Math').then((m) => ({ default: m.Scene1Math })),
-)
-const Scene2Attention = lazy(() =>
-  import('./scenes/Scene2Attention').then((m) => ({ default: m.Scene2Attention })),
-)
-const Scene3Agent = lazy(() =>
-  import('./scenes/Scene3Agent').then((m) => ({ default: m.Scene3Agent })),
-)
-const Scene4MachineRoom = lazy(() =>
-  import('./scenes/Scene4MachineRoom').then((m) => ({ default: m.Scene4MachineRoom })),
-)
+/* Below-fold acts are separate chunks — KaTeX and friends only download
+   when the film actually reaches them. */
+const ThePlane = lazy(() => import('./plane/ThePlane').then((m) => ({ default: m.ThePlane })))
 const Credits = lazy(() => import('./scenes/Credits').then((m) => ({ default: m.Credits })))
 
 function SceneFallback() {
@@ -76,10 +65,7 @@ function App() {
       <main>
         <TitleCard />
         <Suspense fallback={<SceneFallback />}>
-          <Scene1Math />
-          <Scene2Attention />
-          <Scene3Agent />
-          <Scene4MachineRoom />
+          <ThePlane />
           <Credits />
           <RefreshTriggers />
         </Suspense>

@@ -1,0 +1,279 @@
+.plane-scene {
+  padding-bottom: var(--space-6);
+}
+
+.plane-wrap {
+  margin-top: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(ellipse 60% 45% at 78% 38%, color-mix(in srgb, var(--gold-deep) 7%, transparent), transparent),
+    var(--bg-raised);
+  overflow: hidden;
+}
+
+.plane-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ————— grid & axes ————— */
+
+.pl-grid line {
+  stroke: color-mix(in srgb, var(--ink) 6%, transparent);
+  stroke-width: 1;
+}
+
+.pl-axis {
+  stroke: color-mix(in srgb, var(--ink) 22%, transparent);
+  stroke-width: 1.2;
+}
+
+.pl-axis-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  fill: color-mix(in srgb, var(--ink) 38%, transparent);
+}
+
+/* ————— edges ————— */
+
+.pl-edge {
+  stroke: color-mix(in srgb, var(--teal) 30%, transparent);
+  stroke-width: 0.9;
+  fill: none;
+  opacity: 0.5;
+  transition: opacity 0.25s, stroke 0.25s;
+}
+
+.has-focus .pl-edge {
+  opacity: 0.12;
+}
+
+.has-focus .pl-edge.is-lit {
+  opacity: 0.95;
+  stroke: color-mix(in srgb, var(--teal) 75%, transparent);
+  stroke-width: 1.3;
+}
+
+/* ————— nodes ————— */
+
+.pl-node {
+  cursor: pointer;
+  outline: none;
+  transition: opacity 0.25s;
+}
+
+.has-focus .pl-node:not(.is-active):not(.is-neighbor) {
+  opacity: 0.22;
+}
+
+.pl-hit {
+  fill: transparent;
+}
+
+.pl-core {
+  transition: transform 0.2s;
+}
+
+.pl-node:hover .pl-core,
+.pl-node.is-active .pl-core {
+  transform: scale(1.18);
+}
+
+.pl-node:focus-visible .pl-core {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.pl-halo {
+  opacity: 0.2;
+  transition: opacity 0.25s;
+}
+
+.pl-node.is-active .pl-halo {
+  opacity: 0.5;
+}
+
+/* palette by kind: papers/projects/learning = teal stars, roles = gold */
+.pl-paper .pl-core,
+.pl-project .pl-core {
+  fill: var(--teal);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--teal) 70%, transparent));
+}
+
+.pl-paper .pl-halo,
+.pl-project .pl-halo {
+  fill: var(--teal);
+}
+
+.pl-learning .pl-core {
+  fill: color-mix(in srgb, var(--teal) 55%, var(--bg));
+  stroke: var(--teal);
+  stroke-width: 1;
+  stroke-dasharray: 2.5 2.5;
+}
+
+.pl-learning .pl-halo {
+  fill: var(--teal);
+  opacity: 0.1;
+}
+
+.pl-education .pl-core,
+.pl-work .pl-core {
+  fill: var(--gold);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--gold) 70%, transparent));
+}
+
+.pl-education .pl-halo,
+.pl-work .pl-halo {
+  fill: var(--gold);
+}
+
+.pl-origin .pl-core {
+  fill: #fff4dc;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--gold) 80%, transparent));
+}
+
+.pl-origin .pl-halo {
+  fill: var(--gold);
+}
+
+.pl-origin-ring {
+  fill: none;
+  stroke: color-mix(in srgb, var(--gold) 55%, transparent);
+  stroke-width: 1;
+}
+
+.pl-career .pl-core {
+  fill: var(--gold);
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--gold) 90%, transparent));
+}
+
+.pl-career .pl-halo {
+  fill: var(--gold);
+  opacity: 0.28;
+}
+
+/* ————— labels ————— */
+
+.pl-label {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  fill: var(--ink);
+  text-anchor: middle;
+}
+
+.pl-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  fill: var(--ink-faint);
+  text-anchor: middle;
+}
+
+/* ————— resultant machinery ————— */
+
+.pl-ghost {
+  stroke: var(--teal);
+  stroke-width: 1;
+  opacity: 0;
+}
+
+.pl-chain {
+  stroke: var(--teal);
+  stroke-width: 2;
+  opacity: 0;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--teal) 60%, transparent));
+}
+
+.pl-chain-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--teal);
+  opacity: 0;
+}
+
+.pl-result {
+  stroke: var(--gold);
+  stroke-width: 3;
+  opacity: 0;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--gold) 70%, transparent));
+}
+
+/* while deriving, everything not in the sum steps back */
+.is-deriving .pl-node:not(.pl-career):not(.pl-origin):not([data-id='gpt2']):not([data-id='refreader']):not([data-id='mhada']):not([data-id='inframind']) {
+  opacity: 0.18;
+}
+
+.is-deriving .pl-edge {
+  opacity: 0.06;
+}
+
+/* ————— caption row ————— */
+
+.pl-caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.pl-derive {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 9%, transparent);
+  border: 1px solid var(--gold-deep);
+  border-radius: 40px;
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.pl-derive:hover {
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+  transform: translateY(-1px);
+}
+
+.pl-formula {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  color: var(--ink);
+}
+
+.pl-formula .katex {
+  font-size: 1.05rem;
+}
+
+.pl-formula span {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+/* ————— mobile ————— */
+
+@media (max-width: 700px) {
+  .pl-label-g {
+    display: none;
+  }
+
+  .pl-node.is-active .pl-label-g {
+    display: block;
+  }
+
+  .pl-formula span {
+    display: none;
+  }
+}

@@ -7,10 +7,8 @@ import './TitleCard.css'
 gsap.registerPlugin(useGSAP)
 
 const SCENES = [
-  { n: '01', title: 'Mathematics', href: '#mathematics' },
-  { n: '02', title: 'Attention', href: '#attention' },
-  { n: '03', title: 'The Agent', href: '#agent' },
-  { n: '04', title: 'The Machine Room', href: '#machine-room' },
+  { n: '01', title: 'The Plane', href: '#plane' },
+  { n: '02', title: 'End Credits', href: '#credits' },
 ]
 
 export function TitleCard() {
