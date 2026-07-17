@@ -48,7 +48,7 @@ export function TitleCard() {
         <p className="title-sub">
           <em>chalchitra</em> (चलचित्र) — <span>a moving picture.</span>
           <br />
-          The journey of <strong>Aditya Sharma</strong>, in four scenes.
+          The journey of <strong>Aditya Sharma</strong>, mapped on one plane.
         </p>
 
         <p className="title-tagline">

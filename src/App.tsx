@@ -29,7 +29,14 @@ function SceneFallback() {
    page height — again once the webfonts settle. */
 function RefreshTriggers() {
   useEffect(() => {
-    const raf = requestAnimationFrame(() => ScrollTrigger.refresh())
+    const raf = requestAnimationFrame(() => {
+      ScrollTrigger.refresh()
+      // lazy sections exist only now — honor a plain #section deep link
+      const id = window.location.hash.slice(1)
+      if (id && !id.includes('=')) {
+        document.getElementById(id)?.scrollIntoView({ block: 'start' })
+      }
+    })
     document.fonts?.ready.then(() => ScrollTrigger.refresh())
     return () => cancelAnimationFrame(raf)
   }, [])
