@@ -1,0 +1,17 @@
+.spotlight {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    560px circle at var(--sx, -1000px) var(--sy, -1000px),
+    color-mix(in srgb, var(--gold) 5%, transparent),
+    transparent 65%
+  );
+}
+
+@media (hover: none), (pointer: coarse) {
+  .spotlight {
+    display: none;
+  }
+}

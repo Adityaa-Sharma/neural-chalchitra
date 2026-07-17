@@ -5,6 +5,7 @@ import Lenis from 'lenis'
 
 import { GrainOverlay } from './components/GrainOverlay'
 import { FilmProgress } from './components/FilmProgress'
+import { Spotlight } from './components/Spotlight'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
 import { useGlowCards } from './hooks/useGlowCards'
 import { registerLenis } from './lib/scrollNav'
@@ -70,6 +71,7 @@ function App() {
           <RefreshTriggers />
         </Suspense>
       </main>
+      <Spotlight />
       <GrainOverlay />
       <VoiceGuide />
     </>
