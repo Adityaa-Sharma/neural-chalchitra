@@ -117,6 +117,9 @@ export function useVoiceGuide() {
     if (!action || action === 'none') return
     const [kind, target] = action.split(':')
     if (kind === 'scroll' && target) scrollToSection(target)
+    else if (kind === 'open' && target) {
+      window.dispatchEvent(new CustomEvent('plane:open', { detail: target }))
+    }
   }, [])
 
   // forward declarations so the loop can reference each other
