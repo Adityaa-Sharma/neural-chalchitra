@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#191309"/>
+      <stop offset="55%" stop-color="#0e0c08"/>
+      <stop offset="100%" stop-color="#0b0a08"/>
+    </radialGradient>
+    <linearGradient id="blade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff8e6"/>
+      <stop offset="45%" stop-color="#f3e6c2"/>
+      <stop offset="100%" stop-color="#cdb98a"/>
+    </linearGradient>
+    <linearGradient id="helm" x1="0" y1="0" x2="1" y2="0.25">
+      <stop offset="0%" stop-color="#332818"/>
+      <stop offset="55%" stop-color="#221b11"/>
+      <stop offset="100%" stop-color="#15100a"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8b44f"/>
+      <stop offset="100%" stop-color="#9e7629"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="14" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <filter id="smokeblur" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- his plane: faint grid -->
+  <g stroke="#e8b44f" stroke-opacity="0.05" stroke-width="2">
+    <line x1="0" y1="256" x2="1024" y2="256"/>
+    <line x1="0" y1="512" x2="1024" y2="512"/>
+    <line x1="0" y1="768" x2="1024" y2="768"/>
+    <line x1="256" y1="0" x2="256" y2="1024"/>
+    <line x1="512" y1="0" x2="512" y2="1024"/>
+    <line x1="768" y1="0" x2="768" y2="1024"/>
+  </g>
+
+  <!-- constellation -->
+  <g fill="#e8b44f">
+    <circle cx="150" cy="180" r="5" opacity="0.7"/>
+    <circle cx="290" cy="120" r="3" opacity="0.45"/>
+    <circle cx="870" cy="180" r="4" opacity="0.55"/>
+    <circle cx="120" cy="560" r="3" opacity="0.4"/>
+    <circle cx="890" cy="700" r="4" opacity="0.5"/>
+    <circle cx="180" cy="840" r="3" opacity="0.35"/>
+    <circle cx="700" cy="880" r="3" opacity="0.4"/>
+  </g>
+  <g fill="#63d8c6">
+    <circle cx="380" cy="105" r="3" opacity="0.5"/>
+    <circle cx="80" cy="380" r="3" opacity="0.4"/>
+    <circle cx="930" cy="480" r="3" opacity="0.45"/>
+    <circle cx="320" cy="900" r="3" opacity="0.4"/>
+  </g>
+  <g stroke="#63d8c6" stroke-opacity="0.16" stroke-width="1.5">
+    <line x1="150" y1="180" x2="290" y2="120"/>
+    <line x1="290" y1="120" x2="380" y2="105"/>
+    <line x1="890" y1="700" x2="930" y2="480"/>
+  </g>
+
+  <!-- DAWN, diagonal behind the helm -->
+  <g transform="rotate(38 512 512)">
+    <path d="M 512 158 L 534 198 L 534 690 L 512 752 L 490 690 L 490 198 Z"
+          fill="url(#blade)" filter="url(#glow)" opacity="0.96"/>
+    <line x1="512" y1="215" x2="512" y2="672" stroke="#b7a072" stroke-width="4" opacity="0.55"/>
+    <rect x="436" y="146" width="152" height="20" rx="10" fill="url(#rim)"/>
+    <rect x="499" y="88" width="26" height="58" rx="9" fill="#3a2d18"/>
+    <g transform="translate(512 64)">
+      <circle r="14" fill="#fff4dc" filter="url(#glow)"/>
+      <path d="M 0 -30 L 6 -8 L 30 0 L 6 8 L 0 30 L -6 8 L -30 0 L -6 -8 Z"
+            fill="#fff4dc" opacity="0.9"/>
+    </g>
+  </g>
+
+  <!-- THE GREAT HELM, side profile facing right -->
+  <g>
+    <!-- body -->
+    <path d="M 432 356
+             C 436 300 486 262 552 260
+             C 618 258 662 296 668 348
+             L 678 402
+             L 678 566
+             C 678 582 668 592 652 594
+             L 492 610
+             C 462 612 442 596 440 566
+             L 432 400
+             Z"
+          fill="url(#helm)"/>
+    <!-- crown rim light -->
+    <path d="M 432 356 C 436 300 486 262 552 260 C 618 258 662 296 668 348"
+          fill="none" stroke="url(#rim)" stroke-width="6" opacity="0.95" stroke-linecap="round"/>
+    <!-- front face edge light -->
+    <path d="M 668 348 L 678 402 L 678 566"
+          fill="none" stroke="url(#rim)" stroke-width="3.5" opacity="0.6"/>
+    <!-- the cross: vertical reinforcement ridge -->
+    <path d="M 630 276 L 640 588" stroke="#0a0806" stroke-width="10" opacity="0.85"/>
+    <path d="M 628 276 L 638 588" stroke="#9e7629" stroke-width="2.5" opacity="0.5"/>
+    <!-- visor slit (the horizontal of the cross) -->
+    <rect x="548" y="392" width="128" height="16" rx="8" fill="#050403"/>
+    <rect x="590" y="395" width="52" height="9" rx="4.5" fill="#63d8c6" opacity="0.9" filter="url(#soft)"/>
+    <!-- rivets along the crown -->
+    <g fill="#e8b44f" opacity="0.75">
+      <circle cx="470" cy="308" r="4.5"/>
+      <circle cx="516" cy="284" r="4.5"/>
+      <circle cx="568" cy="278" r="4.5"/>
+      <circle cx="616" cy="292" r="4.5"/>
+    </g>
+    <!-- breathing holes -->
+    <g fill="#050403">
+      <circle cx="596" cy="480" r="6"/>
+      <circle cx="622" cy="484" r="6"/>
+      <circle cx="608" cy="506" r="6"/>
+    </g>
+  </g>
+
+  <!-- cigarette, anchored at the mouth line of the face plate -->
+  <g transform="rotate(10 676 540)">
+    <rect x="672" y="533" width="104" height="14" rx="7" fill="#efe6d4"/>
+    <rect x="672" y="533" width="22" height="14" rx="7" fill="#c9a26a"/>
+    <circle cx="778" cy="540" r="9" fill="#ff9a3d" filter="url(#glow)"/>
+  </g>
+
+  <!-- smoke: rises from the ember, resolves into a star -->
+  <g fill="none" stroke="#63d8c6" stroke-linecap="round" filter="url(#smokeblur)">
+    <path d="M 782 554 C 804 518 782 486 812 448 C 842 412 824 372 850 336 C 866 314 858 296 868 278"
+          stroke-width="9" stroke-opacity="0.5"/>
+    <path d="M 786 558 C 822 534 804 494 838 462 C 868 434 852 392 880 362"
+          stroke-width="6" stroke-opacity="0.28"/>
+  </g>
+  <circle cx="870" cy="266" r="5.5" fill="#63d8c6" opacity="0.85" filter="url(#soft)"/>
+
+  <!-- outer ring -->
+  <circle cx="512" cy="512" r="484" fill="none" stroke="#9e7629" stroke-opacity="0.5" stroke-width="6"/>
+  <circle cx="512" cy="512" r="466" fill="none" stroke="#e8b44f" stroke-opacity="0.14" stroke-width="2"/>
+</svg>
