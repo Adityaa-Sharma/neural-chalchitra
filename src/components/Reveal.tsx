@@ -1,4 +1,4 @@
-import { useRef, type ElementType, type ReactNode } from 'react'
+import { createElement, useRef, type ElementType, type ReactNode } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
@@ -40,9 +40,7 @@ export function Reveal({ as: Tag = 'div', className, delay = 0, children, ...res
     { scope: ref, dependencies: [reducedMotion] },
   )
 
-  return (
-    <Tag ref={ref} className={className} {...rest}>
-      {children}
-    </Tag>
-  )
+  // createElement (not JSX) so a generic tag isn't mis-typed against R3F's
+  // augmented intrinsic-element namespace
+  return createElement(Tag, { ref, className, ...rest }, children)
 }

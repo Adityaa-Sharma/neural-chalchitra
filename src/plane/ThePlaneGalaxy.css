@@ -1,0 +1,67 @@
+/* tall section = scroll runway for the flight; canvas is pinned inside */
+.galaxy-section {
+  position: relative;
+  height: 500vh;
+}
+
+.galaxy-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #07060a;
+}
+
+.galaxy-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.galaxy-canvas canvas {
+  display: block;
+  touch-action: pan-y;
+}
+
+/* header overlay, top-left, fades as you fly in */
+.galaxy-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: clamp(24px, 6vh, 64px) var(--scene-pad-x);
+  max-width: min(640px, 90vw);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.galaxy-overlay .slate {
+  pointer-events: auto;
+}
+
+.galaxy-title {
+  margin-bottom: var(--space-3);
+  text-shadow: 0 2px 30px #000;
+}
+
+.galaxy-lede {
+  text-shadow: 0 1px 16px #000;
+}
+
+.galaxy-scrollcue {
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .galaxy-scrollcue {
+    animation: gx-cue 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes gx-cue {
+  0%, 100% { opacity: 0.5; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(4px); }
+}

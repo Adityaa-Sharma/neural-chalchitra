@@ -17,7 +17,9 @@ gsap.registerPlugin(ScrollTrigger)
 
 /* Below-fold acts are separate chunks — KaTeX and friends only download
    when the film actually reaches them. */
-const ThePlane = lazy(() => import('./plane/ThePlane').then((m) => ({ default: m.ThePlane })))
+const ThePlaneGalaxy = lazy(() =>
+  import('./plane/ThePlaneGalaxy').then((m) => ({ default: m.ThePlaneGalaxy })),
+)
 const Credits = lazy(() => import('./scenes/Credits').then((m) => ({ default: m.Credits })))
 
 function SceneFallback() {
@@ -73,7 +75,7 @@ function App() {
       <main>
         <TitleCard />
         <Suspense fallback={<SceneFallback />}>
-          <ThePlane />
+          <ThePlaneGalaxy />
           <Credits />
           <RefreshTriggers />
         </Suspense>

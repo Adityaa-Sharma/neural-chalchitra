@@ -1,0 +1,36 @@
+.gx-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  white-space: nowrap;
+  transform: translateY(-4px);
+  opacity: 0;
+  transition: opacity 0.3s;
+  user-select: none;
+}
+
+/* labels stay quiet until a star is hovered/active — no collision clutter */
+.gx-label.is-lit {
+  opacity: 1;
+}
+
+.gx-label.is-dim {
+  opacity: 0;
+}
+
+.gx-label-name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-shadow: 0 1px 6px #000, 0 0 2px #000;
+}
+
+.gx-label-sub {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  text-shadow: 0 1px 6px #000;
+}
