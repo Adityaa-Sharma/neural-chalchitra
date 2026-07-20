@@ -130,8 +130,7 @@ export function ThePlane() {
             { scale: 0.2, transformOrigin: 'center', duration: 0.6, ease: 'back.out(2)', stagger: { each: 0.04, from: 'center' } },
             '-=0.7',
           )
-          .from('.star-label', { opacity: 0, duration: 0.7, stagger: 0.02 }, '-=0.3')
-          .from('.role-item', { opacity: 0, x: 16, duration: 0.5, stagger: 0.08 }, '-=0.9')
+          .from('.role-item', { opacity: 0, x: 16, duration: 0.5, stagger: 0.08 }, '-=0.5')
           .from('.plane-caption', { opacity: 0, y: 10, duration: 0.7 }, '-=0.3')
       }
       const io = new IntersectionObserver(
