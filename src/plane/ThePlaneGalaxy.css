@@ -27,14 +27,164 @@
   position: absolute;
   top: 0;
   left: 0;
-  padding: clamp(24px, 6vh, 64px) var(--scene-pad-x);
+  padding: clamp(72px, 13vh, 128px) var(--scene-pad-x) clamp(24px, 6vh, 64px);
   max-width: min(640px, 90vw);
   pointer-events: none;
   z-index: 2;
+  transition: opacity 0.6s ease;
+}
+
+.galaxy-overlay.is-flown {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .galaxy-overlay .slate {
   pointer-events: auto;
+}
+
+/* ── the persistent metadata HUD (the grounding layer) ────────────────────
+   Always on, welded over the flight, mono/metadata typography. This is what
+   makes an abstract star-field read as "these are my projects". */
+.gx-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  font-family: var(--font-mono);
+}
+
+/* top strip: wordmark · PROJECTS ······ current era · counter */
+.gx-hud-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: baseline;
+  gap: clamp(8px, 1.6vw, 20px);
+  padding: clamp(14px, 3vh, 26px) var(--scene-pad-x);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, rgba(7, 6, 10, 0.72), transparent);
+  text-shadow: 0 1px 6px #000;
+}
+
+.gx-hud-mark {
+  color: var(--ink);
+  font-weight: 600;
+}
+.gx-hud-tag {
+  color: var(--gold);
+}
+.gx-hud-era {
+  margin-left: auto;
+  color: var(--ink-faint);
+  transition: color 0.4s ease;
+}
+.gx-hud-count {
+  color: var(--ink);
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+.gx-hud-count i {
+  color: var(--ink-faint);
+  font-style: normal;
+  margin: 0 2px;
+}
+
+/* the "now passing" card — names each star as you fly to it; click = open */
+.gx-hud-card {
+  position: absolute;
+  left: var(--scene-pad-x);
+  bottom: clamp(60px, 12vh, 120px);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  pointer-events: auto;
+  cursor: pointer;
+  padding: 13px 18px 14px 16px;
+  border: 1px solid rgba(232, 180, 79, 0.22);
+  border-left: 2px solid var(--gold);
+  background: rgba(9, 8, 14, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  max-width: min(340px, 74vw);
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease,
+    border-color 0.3s ease;
+}
+.gx-hud-card.is-on {
+  opacity: 1;
+  transform: none;
+}
+.gx-hud-card:hover {
+  border-color: var(--gold);
+}
+
+.gx-hud-kicker {
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.gx-hud-name {
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin-top: 3px;
+}
+.gx-hud-sub {
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--gold);
+}
+.gx-hud-period {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  margin-top: 3px;
+}
+.gx-hud-open {
+  margin-top: 9px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #63d8c6;
+}
+
+/* axis legend — the map's compass, bottom-center (clear of the voice widget) */
+.gx-hud-axes {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: clamp(20px, 4vh, 34px);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(18px, 4vw, 52px);
+  white-space: nowrap;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-shadow: 0 1px 6px #000;
+}
+
+@media (max-width: 600px) {
+  .gx-hud-mark,
+  .gx-hud-axes {
+    display: none;
+  }
+  .gx-hud-bar {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+  }
 }
 
 .galaxy-title {

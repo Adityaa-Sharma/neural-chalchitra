@@ -19,16 +19,18 @@ const COLORS: Record<string, string> = {
 interface NodeProps {
   node: GalaxyNode
   active: boolean
+  /** the star the camera is passing — label stays lit without a hover */
+  near: boolean
   dim: boolean
   onSelect: (id: string) => void
   onHover: (id: string | null) => void
 }
 
-function StarNode({ node, active, dim, onSelect, onHover }: NodeProps) {
+function StarNode({ node, active, near, dim, onSelect, onHover }: NodeProps) {
   const grp = useRef<THREE.Group>(null)
   const [hovered, setHovered] = useState(false)
   const color = COLORS[node.kind] ?? '#63d8c6'
-  const lit = active || hovered
+  const lit = active || hovered || near
 
   useFrame((state) => {
     if (!grp.current) return
@@ -91,12 +93,13 @@ function StarNode({ node, active, dim, onSelect, onHover }: NodeProps) {
 
 interface GalaxyNodesProps {
   activeId: string | null
+  nearId: string | null
   litSet: Set<string> | null
   onSelect: (id: string) => void
   onHover: (id: string | null) => void
 }
 
-export function GalaxyNodes({ activeId, litSet, onSelect, onHover }: GalaxyNodesProps) {
+export function GalaxyNodes({ activeId, nearId, litSet, onSelect, onHover }: GalaxyNodesProps) {
   return (
     <group>
       {GALAXY_NODES.filter((n) => n.kind !== 'career').map((n) => (
@@ -104,6 +107,7 @@ export function GalaxyNodes({ activeId, litSet, onSelect, onHover }: GalaxyNodes
           key={n.id}
           node={n}
           active={activeId === n.id}
+          near={nearId === n.id}
           dim={!!litSet && !litSet.has(n.id)}
           onSelect={onSelect}
           onHover={onHover}
@@ -117,6 +121,7 @@ export function GalaxyNodes({ activeId, litSet, onSelect, onHover }: GalaxyNodes
             key={r.id}
             node={{ ...node, id: r.id, label: '', sub: undefined, pos: r.pos, size: 0.55 }}
             active={activeId === `role-${r.id}`}
+            near={false}
             dim={!!litSet && !litSet.has(`role-${r.id}`)}
             onSelect={() => onSelect(`role-${r.id}`)}
             onHover={() => {}}

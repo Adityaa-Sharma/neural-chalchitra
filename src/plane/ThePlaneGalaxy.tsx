@@ -6,8 +6,8 @@ import * as THREE from 'three'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { Reveal } from '../components/Reveal'
 import { RevealTitle } from '../components/RevealTitle'
-import { NODES, type PlaneNode } from './careerData'
-import { galaxyNodeById } from './galaxy/galaxyData'
+import { NODES, nodeById, type PlaneNode } from './careerData'
+import { galaxyNodeById, eraLabelOf, timelineIndex, TIMELINE } from './galaxy/galaxyData'
 import { NodeDrawer } from './NodeDrawer'
 import './ThePlaneGalaxy.css'
 
@@ -54,6 +54,8 @@ function Galaxy3D() {
   const focusRef = useRef<THREE.Vector3 | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
   const [hovered, setHovered] = useState<string | null>(null)
+  // the star the camera is currently flying past — grounds the whole HUD
+  const [nearId, setNearId] = useState<string>('origin')
 
   const starCount = useMemo(
     () => (typeof window !== 'undefined' && window.innerWidth < 768 ? 700 : 1300),
@@ -120,6 +122,14 @@ function Galaxy3D() {
 
   const node = useMemo(() => NODES.find((n) => n.id === selected) ?? null, [selected])
 
+  // HUD grounding data — always reflects the star the camera is passing
+  const nearNode = nodeById(nearId)
+  const eraLabel = eraLabelOf(nearId)
+  const idx = timelineIndex(nearId)
+  const total = TIMELINE.length
+  const flying = nearId !== 'origin'
+  const pad2 = (n: number) => String(n).padStart(2, '0')
+
   return (
     <section className="galaxy-section" id="plane" ref={rootRef}>
       <div className="galaxy-sticky">
@@ -130,16 +140,50 @@ function Galaxy3D() {
               pointerRef={pointerRef}
               focusRef={focusRef}
               activeId={selected ?? hovered}
+              nearId={nearId}
               litSet={null}
               onSelect={select}
               onHover={setHovered}
+              onNear={setNearId}
               reduced={false}
               starCount={starCount}
             />
           </Suspense>
         </div>
 
-        <div className="galaxy-overlay">
+        {/* persistent metadata layer — keeps the star-field legible: the frame
+            always says these are PROJECTS, which era you're in, and names the
+            star you're passing. (the sidewave move.) */}
+        <div className="gx-hud">
+          <div className="gx-hud-bar">
+            <span className="gx-hud-mark">NEURAL CHALCHITRA</span>
+            <span className="gx-hud-tag">/ PROJECTS</span>
+            <span className="gx-hud-era">{eraLabel}</span>
+            <span className="gx-hud-count">
+              {pad2(idx)} <i>/</i> {pad2(total)}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            className={`gx-hud-card ${flying ? 'is-on' : ''}`}
+            onClick={() => nearNode && select(nearNode.id)}
+            aria-label={nearNode ? `Open ${nearNode.label}` : undefined}
+          >
+            <span className="gx-hud-kicker">now passing</span>
+            <span className="gx-hud-name">{nearNode?.label}</span>
+            {nearNode?.sub && <span className="gx-hud-sub">{nearNode.sub}</span>}
+            <span className="gx-hud-period">{nearNode?.period}</span>
+            <span className="gx-hud-open">▸ open the story</span>
+          </button>
+
+          <div className="gx-hud-axes">
+            <span>← research · production →</span>
+            <span>↑ models · infra ↓</span>
+          </div>
+        </div>
+
+        <div className={`galaxy-overlay ${flying ? 'is-flown' : ''}`}>
           <Reveal className="slate">
             <strong>The Plane</strong> निर्देशांक तल
           </Reveal>
@@ -147,8 +191,9 @@ function Galaxy3D() {
             A career is a flight through space.
           </RevealTitle>
           <Reveal as="p" className="prose galaxy-lede">
-            Every project is a star at its own coordinates in time. Scroll to fly from the origin —
-            a mathematics degree — forward to today. Tap any star for the full story.
+            Every star is a project, at its own coordinates in time. Scroll to fly from the origin —
+            a mathematics degree — forward to today. The frame names each one as you pass; tap it for
+            the full story.
           </Reveal>
           <Reveal as="p" className="galaxy-scrollcue" aria-hidden="true">
             scroll to fly ↓

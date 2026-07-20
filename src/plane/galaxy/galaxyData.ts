@@ -23,6 +23,17 @@ const ERA_Z: Record<string, number> = {
   now: -44, // present — the destination
 }
 
+/** human-facing era captions for the HUD — the grounding metadata layer.
+ *  These are what keep the abstract star-field legible: at every moment the
+ *  frame tells you WHICH chapter of the story you're flying through. */
+export const ERA_LABELS: Record<keyof typeof ERA_Z, string> = {
+  origin: 'ORIGIN · MATHEMATICS',
+  '2024a': '2024 · INTO MACHINE LEARNING',
+  '2024b': '2024–25 · SHIPPING SYSTEMS',
+  '2025': '2025 · PAPERS, FROM SCRATCH',
+  now: 'NOW · INTO THE MACHINE ROOM',
+}
+
 /** each node id → which era band it lives in */
 const NODE_ERA: Record<string, keyof typeof ERA_Z> = {
   origin: 'origin',
@@ -95,6 +106,30 @@ export const GALAXY_ROLES: GalaxyRole[] = ROLES.map((r) => {
 export function galaxyNodeById(id: string): GalaxyNode | undefined {
   return GALAXY_NODES.find((n) => n.id === id)
 }
+
+/** the flyable stars, ordered as the flight meets them (origin → present).
+ *  Sorted by era depth descending (z≈0 first, most-negative last); this is the
+ *  spine of the HUD counter — "07 / 13" tells you how far through the arc you are. */
+export const TIMELINE: string[] = NODES.filter((n) => n.kind !== 'career')
+  .map((n) => ({ id: n.id, z: ERA_Z[NODE_ERA[n.id] ?? 'now'] }))
+  .sort((a, b) => b.z - a.z)
+  .map((n) => n.id)
+
+/** 1-based position of a node along the timeline (0 if not on it) */
+export function timelineIndex(id: string): number {
+  return TIMELINE.indexOf(id) + 1
+}
+
+/** the HUD era caption for a node (which chapter it belongs to) */
+export function eraLabelOf(id: string): string {
+  return ERA_LABELS[NODE_ERA[id] ?? 'now']
+}
+
+/** the flyable stars as {id, position} — the camera uses this to announce
+ *  the star it is currently passing (drives the "now passing" HUD card). */
+export const FLYABLE_NODES: { id: string; pos: [number, number, number] }[] = GALAXY_NODES.filter(
+  (n) => n.kind !== 'career',
+).map((n) => ({ id: n.id, pos: n.pos }))
 
 /** tip-to-tail chain in 3D for a role's vector sum */
 export function chain3D(role: Role): {

@@ -10,9 +10,12 @@ export interface GalaxyProps {
   pointerRef: RefObject<{ x: number; y: number }>
   focusRef: RefObject<THREE.Vector3 | null>
   activeId: string | null
+  /** star the camera is currently passing — its label stays lit without hover */
+  nearId: string | null
   litSet: Set<string> | null
   onSelect: (id: string) => void
   onHover: (id: string | null) => void
+  onNear: (id: string) => void
   reduced: boolean
   starCount: number
 }
@@ -23,9 +26,11 @@ export default function Galaxy({
   pointerRef,
   focusRef,
   activeId,
+  nearId,
   litSet,
   onSelect,
   onHover,
+  onNear,
   reduced,
   starCount,
 }: GalaxyProps) {
@@ -40,9 +45,21 @@ export default function Galaxy({
       <fogExp2 attach="fog" args={['#07060a', 0.017]} />
       <Suspense fallback={null}>
         <Starfield count={starCount} reduced={reduced} />
-        <GalaxyNodes activeId={activeId} litSet={litSet} onSelect={onSelect} onHover={onHover} />
+        <GalaxyNodes
+          activeId={activeId}
+          nearId={nearId}
+          litSet={litSet}
+          onSelect={onSelect}
+          onHover={onHover}
+        />
       </Suspense>
-      <CameraRig scrollRef={scrollRef} pointerRef={pointerRef} focusRef={focusRef} reduced={reduced} />
+      <CameraRig
+        scrollRef={scrollRef}
+        pointerRef={pointerRef}
+        focusRef={focusRef}
+        onNear={onNear}
+        reduced={reduced}
+      />
     </Canvas>
   )
 }
