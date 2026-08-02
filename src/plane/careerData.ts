@@ -34,6 +34,8 @@ export interface PlaneNode {
   stack?: string[]
   links?: { label: string; url: string }[]
   media?: MediaItem[]
+  /** embedded demo video (iframe src, e.g. a loom embed url) */
+  video?: { src: string; caption?: string }
   /** ids this node is related to (drawn as constellation edges) */
   edges?: string[]
 }
@@ -259,9 +261,16 @@ export const NODES: PlaneNode[] = [
     y: 0.6,
     period: '2025',
     blurb:
-      'An MCP server that gives a language model real hands: live Upstox portfolio access, order execution, AlphaVantage analytics — natural-language trading from inside an editor.',
+      'An MCP server that gives a language model real hands: live Upstox portfolio access, order execution, AlphaVantage analytics — natural-language trading from inside an editor. Watch it run below.',
     stack: ['mcp', 'upstox api'],
-    links: [{ label: 'repo ↗', url: 'https://github.com/Adityaa-Sharma/Trading_mcp_server' }],
+    links: [
+      { label: 'repo ↗', url: 'https://github.com/Adityaa-Sharma/Trading_mcp_server' },
+      { label: 'demo video ↗', url: 'https://www.loom.com/share/11669cb8a1ad4867971af8f6b9b8516c' },
+    ],
+    video: {
+      src: 'https://www.loom.com/embed/11669cb8a1ad4867971af8f6b9b8516c',
+      caption: 'live demo — trading in natural language, from the editor',
+    },
     edges: ['refreader'],
   },
   {

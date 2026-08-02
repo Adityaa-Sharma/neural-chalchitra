@@ -74,6 +74,21 @@ export function NodeDrawer({ node, onClose, onNav }: NodeDrawerProps) {
         )}
       </p>
 
+      {node.video && (
+        <figure className="nd-media nd-video">
+          <div className="nd-video-frame">
+            <iframe
+              src={node.video.src}
+              title={`${node.label} — demo video`}
+              loading="lazy"
+              allowFullScreen
+              allow="fullscreen; picture-in-picture"
+            />
+          </div>
+          {node.video.caption && <figcaption>{node.video.caption}</figcaption>}
+        </figure>
+      )}
+
       {node.media?.map((m) => (
         <figure className="nd-media" key={m.src}>
           <img src={asset(m.src)} alt={m.caption} width={m.w} height={m.h} loading="lazy" />
