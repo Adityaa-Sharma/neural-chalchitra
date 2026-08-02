@@ -168,7 +168,7 @@ export function Credits() {
         </Reveal>
 
         <Reveal className="credits-contact">
-          <MagneticLink href="mailto:mailmeifyoucan7@gmail.com">email</MagneticLink>
+          <MagneticLink href="mailto:adityasharma.jprr@gmail.com">email</MagneticLink>
           <MagneticLink href="https://github.com/Adityaa-Sharma">github</MagneticLink>
           <MagneticLink href="https://huggingface.co/Adityyaa">hugging face</MagneticLink>
           <MagneticLink href={asset('Aditya_Sharma_Resume.pdf')}>resume.pdf</MagneticLink>

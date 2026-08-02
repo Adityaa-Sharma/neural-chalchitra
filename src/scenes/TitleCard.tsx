@@ -65,7 +65,7 @@ export function TitleCard() {
         </ul>
 
         <div className="title-cta">
-          <a className="cta-main" href="mailto:mailmeifyoucan7@gmail.com">
+          <a className="cta-main" href="mailto:adityasharma.jprr@gmail.com">
             email me
           </a>
           <a href={asset('Aditya_Sharma_Resume.pdf')} target="_blank" rel="noreferrer">
