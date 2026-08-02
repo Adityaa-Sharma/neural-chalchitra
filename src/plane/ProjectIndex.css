@@ -173,6 +173,16 @@
   object-fit: contain;
 }
 
+/* marks that are already a solid colour tile (Savills) sit bare */
+.pindex-logo.is-bare {
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+.pindex-logo.is-bare img {
+  border-radius: 5px;
+}
+
 .pindex-meta {
   font-family: var(--font-mono);
   font-size: 11px;

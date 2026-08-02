@@ -25,6 +25,7 @@ const GROUPS: {
   accent: string
   ids: string[]
   logo?: string
+  logoBare?: boolean
 }[] = [
   {
     key: 'edu',
@@ -57,6 +58,7 @@ const GROUPS: {
     accent: '#e8b44f',
     ids: ['career'],
     logo: 'assets/logos/savills.png',
+    logoBare: true,
   },
   {
     key: 'freelance',
@@ -158,7 +160,7 @@ export function ProjectIndex({ onOpen, view, onView }: ProjectIndexProps) {
           >
             <header className="pindex-group-head">
               {g.logo && (
-                <span className="pindex-logo">
+                <span className={`pindex-logo ${g.logoBare ? 'is-bare' : ''}`}>
                   <img src={asset(g.logo)} alt="" loading="lazy" />
                 </span>
               )}

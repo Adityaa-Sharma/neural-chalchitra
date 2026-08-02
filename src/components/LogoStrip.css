@@ -57,8 +57,14 @@
   object-fit: contain;
 }
 
-.logo-chip.is-wide img {
-  max-width: 260px;
+/* marks that are already a solid colour tile need no light chip behind them */
+.logo-chip.is-bare {
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+.logo-chip.is-bare img {
+  border-radius: 7px;
 }
 
 .logo-name {
