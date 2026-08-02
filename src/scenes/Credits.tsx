@@ -28,6 +28,13 @@ const NOW = [
   'And beyond these — anything exciting to solve, with impact you can point at',
 ]
 
+/* The person, off the clock — small on purpose, all of it true. */
+const OFF_CLOCK = [
+  'Badminton — state selections; represented IIIT Lucknow at Inter-IIIT, all India',
+  'NCC — B & C certificates; the discipline outlasted the uniform',
+  'Running — still the fastest way I know to clear a context window',
+]
+
 function MagneticLink({ href, children }: { href: string; children: ReactNode }) {
   const ref = useMagnetic<HTMLAnchorElement>()
   const external = href.startsWith('http') || href.endsWith('.pdf')
@@ -152,6 +159,15 @@ export function Credits() {
             <h3>Problems I&rsquo;m chasing</h3>
             <ul className="now-list">
               {NOW.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal className="credits-block" delay={0.24}>
+            <h3>Behind the scenes</h3>
+            <ul className="now-list">
+              {OFF_CLOCK.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
