@@ -2,13 +2,13 @@ import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import * as THREE from 'three'
-import { GALAXY_NODES, GALAXY_ROLES, type GalaxyNode } from './galaxyData'
+import { GALAXY_NODES, type GalaxyNode } from './galaxyData'
 import { starTexture } from './starTexture'
 import './galaxyNodes.css'
 
 const COLORS: Record<string, string> = {
   origin: '#fff4dc',
-  education: '#e8b44f',
+  education: '#ece7dd',
   paper: '#63d8c6',
   project: '#63d8c6',
   work: '#e8b44f',
@@ -19,7 +19,7 @@ const COLORS: Record<string, string> = {
 interface NodeProps {
   node: GalaxyNode
   active: boolean
-  /** the star the camera is passing — label stays lit without a hover */
+  /** star belongs to the chapter the camera is paused at — label stays lit */
   near: boolean
   dim: boolean
   onSelect: (id: string) => void
@@ -43,12 +43,12 @@ function StarNode({ node, active, near, dim, onSelect, onHover }: NodeProps) {
   return (
     <group position={node.pos} ref={grp}>
       {/* glow sprite */}
-      <sprite scale={node.size * 3.4}>
+      <sprite scale={node.size * 3.2}>
         <spriteMaterial
           map={starTexture()}
           color={color}
           transparent
-          opacity={dim ? 0.1 : 0.42}
+          opacity={dim ? 0.1 : 0.4}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
@@ -93,13 +93,14 @@ function StarNode({ node, active, near, dim, onSelect, onHover }: NodeProps) {
 
 interface GalaxyNodesProps {
   activeId: string | null
-  nearId: string | null
+  /** ids of the chapter the camera is paused at */
+  nearSet: Set<string> | null
   litSet: Set<string> | null
   onSelect: (id: string) => void
   onHover: (id: string | null) => void
 }
 
-export function GalaxyNodes({ activeId, nearId, litSet, onSelect, onHover }: GalaxyNodesProps) {
+export function GalaxyNodes({ activeId, nearSet, litSet, onSelect, onHover }: GalaxyNodesProps) {
   return (
     <group>
       {GALAXY_NODES.map((n) => (
@@ -107,28 +108,12 @@ export function GalaxyNodes({ activeId, nearId, litSet, onSelect, onHover }: Gal
           key={n.id}
           node={n}
           active={activeId === n.id}
-          near={nearId === n.id}
+          near={!!nearSet?.has(n.id)}
           dim={!!litSet && !litSet.has(n.id)}
           onSelect={onSelect}
           onHover={onHover}
         />
       ))}
-      {/* role destination stars (gold, larger). savills is skipped — the career
-          star IS that role, at the same Σwᵢpᵢ point. */}
-      {GALAXY_ROLES.filter((r) => r.id !== 'savills').map((r) => {
-        const node = GALAXY_NODES.find((n) => n.id === 'career')!
-        return (
-          <StarNode
-            key={r.id}
-            node={{ ...node, id: r.id, label: '', sub: undefined, pos: r.pos, size: 0.55 }}
-            active={activeId === `role-${r.id}`}
-            near={false}
-            dim={!!litSet && !litSet.has(`role-${r.id}`)}
-            onSelect={() => onSelect(`role-${r.id}`)}
-            onHover={() => {}}
-          />
-        )
-      })}
     </group>
   )
 }

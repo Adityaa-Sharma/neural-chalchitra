@@ -1,5 +1,4 @@
-import { useMemo, useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useMemo } from 'react'
 import * as THREE from 'three'
 import { starTexture } from './starTexture'
 
@@ -19,19 +18,28 @@ const GOLD = new THREE.Color('#e8b44f')
 const TEAL = new THREE.Color('#63d8c6')
 const WARM = new THREE.Color('#fff4dc')
 
-export function Starfield({ count = 1300, reduced = false }: { count?: number; reduced?: boolean }) {
-  const ref = useRef<THREE.Points>(null)
-
+export function Starfield({ count = 1300 }: { count?: number; reduced?: boolean }) {
   const { positions, colors, sizes } = useMemo(() => {
     const rand = mulberry32(9973)
     const positions = new Float32Array(count * 3)
     const colors = new Float32Array(count * 3)
     const sizes = new Float32Array(count)
     for (let i = 0; i < count; i++) {
-      // a wide, deep slab of space around the flight path (z from -60..6)
-      positions[i * 3] = (rand() - 0.5) * 80
-      positions[i * 3 + 1] = (rand() - 0.5) * 46
-      positions[i * 3 + 2] = -60 + rand() * 66
+      // a wide, deep slab of space around the flight path (z from -78..8)
+      let x = (rand() - 0.5) * 80
+      let y = (rand() - 0.5) * 46
+      const z = -78 + rand() * 86
+      // keep ambience OUT of the camera corridor: a point near the lens axis
+      // renders as a giant blob. push it radially to the flanks.
+      const rad = Math.hypot(x, y)
+      if (rad < 14) {
+        const s = (14 + rand() * 18) / Math.max(rad, 0.001)
+        x *= s
+        y *= s
+      }
+      positions[i * 3] = x
+      positions[i * 3 + 1] = y
+      positions[i * 3 + 2] = z
       const r = rand()
       const col = r > 0.82 ? TEAL : r > 0.66 ? GOLD : WARM
       colors[i * 3] = col.r
@@ -42,13 +50,10 @@ export function Starfield({ count = 1300, reduced = false }: { count?: number; r
     return { positions, colors, sizes }
   }, [count])
 
-  useFrame((_, dt) => {
-    if (!ref.current || reduced) return
-    ref.current.rotation.z += dt * 0.006 // barely-there drift
-  })
-
+  // no rotation drift: it would carry corridor-excluded points back in front
+  // of the lens. the flight itself provides all the motion needed.
   return (
-    <points ref={ref}>
+    <points>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />

@@ -10,12 +10,12 @@ export interface GalaxyProps {
   pointerRef: RefObject<{ x: number; y: number }>
   focusRef: RefObject<THREE.Vector3 | null>
   activeId: string | null
-  /** star the camera is currently passing — its label stays lit without hover */
-  nearId: string | null
+  /** ids of the chapter the camera is paused at — their labels stay lit */
+  nearSet: Set<string> | null
   litSet: Set<string> | null
   onSelect: (id: string) => void
   onHover: (id: string | null) => void
-  onNear: (id: string) => void
+  onStation: (i: number) => void
   reduced: boolean
   starCount: number
 }
@@ -26,28 +26,28 @@ export default function Galaxy({
   pointerRef,
   focusRef,
   activeId,
-  nearId,
+  nearSet,
   litSet,
   onSelect,
   onHover,
-  onNear,
+  onStation,
   reduced,
   starCount,
 }: GalaxyProps) {
   return (
     <Canvas
       dpr={[1, 2]}
-      camera={{ position: [0, 0.5, 9], fov: 60, near: 0.1, far: 220 }}
+      camera={{ position: [0, 1.2, 8.5], fov: 60, near: 0.1, far: 220 }}
       gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
       frameloop={reduced ? 'demand' : 'always'}
     >
       <color attach="background" args={['#07060a']} />
-      <fogExp2 attach="fog" args={['#07060a', 0.017]} />
+      <fogExp2 attach="fog" args={['#07060a', 0.015]} />
       <Suspense fallback={null}>
         <Starfield count={starCount} reduced={reduced} />
         <GalaxyNodes
           activeId={activeId}
-          nearId={nearId}
+          nearSet={nearSet}
           litSet={litSet}
           onSelect={onSelect}
           onHover={onHover}
@@ -57,7 +57,7 @@ export default function Galaxy({
         scrollRef={scrollRef}
         pointerRef={pointerRef}
         focusRef={focusRef}
-        onNear={onNear}
+        onStation={onStation}
         reduced={reduced}
       />
     </Canvas>

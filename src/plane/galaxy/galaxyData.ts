@@ -1,59 +1,77 @@
 import { NODES, nodeById } from '../careerData'
 import { ROLES, resultantOf, type Role } from '../roles'
 
-/* Lift the 2D career plane into 3D.
- *   x: research (−) ↔ production (+)   — same as the plane
- *   y: models (+) ↔ infrastructure (−) — same as the plane
- *   z: TIME. The origin (math) sits deepest in the past (most negative z);
- *      today sits nearest the camera (z ≈ 0). Scrolling forward flies the
- *      camera along −z→0, i.e. through the timeline toward the present.
+/* The flight is a sequence of STATIONS — one per affiliation, same order as
+ * the Index: Education → PG-AGI → Datasmith → own track → Savills.
  *
- * World scale: 1 semantic plane-unit ≈ 1.15 world units. */
+ * Directed flow, by design (owner's spec):
+ *   - the camera pauses at each station, travels deliberately between them
+ *   - each station's stars sit on a tight local shelf, not scattered
+ *   - station 4 bifurcates: independent research LEFT, freelance/personal RIGHT
+ *   - the flight ends at the current role. */
 
-export const SCALE = 1.15
-
-/** era → z depth (world units). Origin sits nearest the camera's start (z≈0);
- *  the present is deepest (most negative), so scrolling flies FORWARD through
- *  time toward today — you arrive at the career star. */
-const ERA_Z: Record<string, number> = {
-  origin: 0, // the math degree — where the flight begins
-  '2024a': -12, // early 2024 — first applied work
-  '2024b': -22, // mid/late 2024
-  '2025': -32, // papers + shipped systems
-  now: -44, // present — the destination
+export interface GalaxyStation {
+  id: string
+  /** chapter heading (org) */
+  title: string
+  /** role · period line under it */
+  meta: string
+  /** stars on the (only or left) shelf */
+  ids: string[]
+  /** stars on the right shelf when the station bifurcates */
+  rightIds?: string[]
+  /** world anchor the shelf is built around */
+  anchor: [number, number, number]
+  /** camera rest distance in front of the anchor */
+  camDist: number
 }
 
-/** human-facing era captions for the HUD — the grounding metadata layer.
- *  Headings carry the arc on their own (a skimmer reads only these):
- *  math → agents before the hype → founding member, govt scale →
- *  fine-tunes & foundations → the client hired me away. */
-export const ERA_LABELS: Record<keyof typeof ERA_Z, string> = {
-  origin: 'ORIGIN · A MATH DEGREE',
-  '2024a': '2024 · AGENTS BEFORE THE HYPE',
-  '2024b': '2024–25 · FOUNDING MEMBER · POC → PRODUCTION',
-  '2025': '2025 · INDEPENDENT RESEARCH',
-  now: 'NOW · SENIOR AI ENGINEER · SAVILLS',
-}
-
-/** each node id → which era band it lives in */
-const NODE_ERA: Record<string, keyof typeof ERA_Z> = {
-  origin: 'origin',
-  'ms-iiitl': '2024a',
-  pgagi: '2024a',
-  ailake: '2024b',
-  mhada: '2024b',
-  refreader: '2024b',
-  tendergenie: '2024b',
-  gpt2: '2025',
-  linformer: '2025',
-  dqn: '2025',
-  tradingmcp: '2025',
-  career: 'now',
-  eve: 'now',
-  latimer: 'now',
-  cuda: 'now',
-  'vllm-study': 'now',
-}
+export const STATIONS: GalaxyStation[] = [
+  {
+    id: 'edu',
+    title: 'Education',
+    meta: 'B.S. Mathematics → M.S. AI & ML · IIIT Lucknow',
+    ids: ['origin', 'ms-iiitl'],
+    anchor: [0, 0.4, 0],
+    camDist: 8.5,
+  },
+  {
+    id: 'pgagi',
+    title: 'PG-AGI',
+    meta: 'AI/ML Intern · 2024',
+    ids: ['pgagi'],
+    anchor: [2.6, 0.4, -12],
+    camDist: 8,
+  },
+  {
+    id: 'datasmith',
+    title: 'Datasmith.ai',
+    meta: 'Founding member · 2024 — 2025 · POC → production',
+    ids: ['ailake', 'mhada', 'tendergenie'],
+    anchor: [-2.4, 0.4, -24],
+    camDist: 9.5,
+  },
+  {
+    id: 'own',
+    title: 'My own track',
+    meta: 'independent research ← · → freelance & personal',
+    ids: ['gpt2', 'linformer', 'dqn', 'cuda', 'vllm-study'],
+    rightIds: ['eve', 'latimer', 'refreader', 'tradingmcp'],
+    // deep enough that the camera's rest point (anchor.z + camDist) keeps
+    // ≥5 units clearance from the previous shelf — never park the lens
+    // inside or against a chapter
+    anchor: [0, 0.6, -44],
+    camDist: 13.5,
+  },
+  {
+    id: 'savills',
+    title: 'Savills',
+    meta: 'Senior AI Engineer · APAC · 2025 — present',
+    ids: ['career'],
+    anchor: [0, 0.4, -60],
+    camDist: 7.5,
+  },
+]
 
 export interface GalaxyNode {
   id: string
@@ -65,108 +83,118 @@ export interface GalaxyNode {
   size: number
 }
 
+/* Sizes normalized within a band — no star may swallow the frame. */
 const KIND_SIZE: Record<string, number> = {
-  origin: 0.58,
-  education: 0.32,
-  paper: 0.4,
-  project: 0.4,
-  work: 0.44,
-  learning: 0.28,
-  career: 0.6,
+  origin: 0.44,
+  education: 0.36,
+  paper: 0.38,
+  project: 0.38,
+  work: 0.46,
+  learning: 0.34,
+  career: 0.55,
 }
 
-/** deterministic small z-jitter so same-era stars don't stack on one plane */
-function jitter(id: string): number {
+/** deterministic small jitter so shelves don't read as a ruler */
+function jitter(id: string, scale = 1): number {
   let h = 0
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0
-  return (((h >>> 0) % 1000) / 1000 - 0.5) * 5.5
+  for (const i of id) h = (h * 31 + i.charCodeAt(0)) | 0
+  return (((h >>> 0) % 1000) / 1000 - 0.5) * scale
 }
 
-function zOf(id: string): number {
-  const era = NODE_ERA[id] ?? 'now'
-  return ERA_Z[era] + jitter(id)
+/** lay a shelf of stars around a center: gentle arc, alternating rise/dip */
+function shelf(ids: string[], center: [number, number, number]): Map<string, [number, number, number]> {
+  const out = new Map<string, [number, number, number]>()
+  const n = ids.length
+  const spacing = n > 3 ? 2.0 : 2.6
+  ids.forEach((id, i) => {
+    const x = center[0] + (i - (n - 1) / 2) * spacing + jitter(id, 0.5)
+    // single stars sit dead-center so the camera frames star + label cleanly
+    const yOff = n === 1 ? 0 : i % 2 === 0 ? 0.65 : -0.65
+    const y = center[1] + yOff + jitter(id + 'y', 0.4)
+    const z = center[2] + jitter(id + 'z', 1.4)
+    out.set(id, [x, y, z])
+  })
+  return out
 }
 
-export const GALAXY_NODES: GalaxyNode[] = NODES.map((n) => ({
+/** every star's world position, computed from its station's shelf layout */
+const POSITIONS: Map<string, [number, number, number]> = (() => {
+  const m = new Map<string, [number, number, number]>()
+  for (const s of STATIONS) {
+    const split = !!s.rightIds
+    const leftCenter: [number, number, number] = split
+      ? [s.anchor[0] - 5.4, s.anchor[1], s.anchor[2]]
+      : s.anchor
+    for (const [id, p] of shelf(s.ids, leftCenter)) m.set(id, p)
+    if (s.rightIds) {
+      const rightCenter: [number, number, number] = [s.anchor[0] + 5.4, s.anchor[1], s.anchor[2]]
+      for (const [id, p] of shelf(s.rightIds, rightCenter)) m.set(id, p)
+    }
+  }
+  return m
+})()
+
+export const GALAXY_NODES: GalaxyNode[] = NODES.filter((n) => POSITIONS.has(n.id)).map((n) => ({
   id: n.id,
   label: n.label,
   sub: n.sub,
   kind: n.kind,
-  pos: [n.x * SCALE * 1.25, n.y * SCALE * 1.25, zOf(n.id)],
-  size: KIND_SIZE[n.kind] ?? 0.4,
+  pos: POSITIONS.get(n.id)!,
+  size: KIND_SIZE[n.kind] ?? 0.38,
 }))
 
-/** role destination stars, placed at Σ wᵢpᵢ (x,y) and near-present z */
+export function galaxyNodeById(id: string): GalaxyNode | undefined {
+  return GALAXY_NODES.find((n) => n.id === id)
+}
+
+/** ids visible at a station (both shelves) — the HUD lights these labels */
+export function stationIds(i: number): Set<string> {
+  const s = STATIONS[Math.max(0, Math.min(STATIONS.length - 1, i))]
+  return new Set([...s.ids, ...(s.rightIds ?? [])])
+}
+
+/** camera rest pose for a station */
+export function stationCam(i: number): {
+  pos: [number, number, number]
+  look: [number, number, number]
+} {
+  const s = STATIONS[Math.max(0, Math.min(STATIONS.length - 1, i))]
+  return {
+    pos: [s.anchor[0], s.anchor[1] + 0.8, s.anchor[2] + s.camDist],
+    look: s.anchor,
+  }
+}
+
+/* Retained for the roles feature (vector-sum): role destination points from
+ * the semantic plane. Not rendered in the station flight. */
 export interface GalaxyRole {
   id: string
   pos: [number, number, number]
 }
 export const GALAXY_ROLES: GalaxyRole[] = ROLES.map((r) => {
   const [x, y] = resultantOf(r)
-  return { id: r.id, pos: [x * SCALE * 1.25, y * SCALE * 1.25, -7] }
+  return { id: r.id, pos: [x * 1.15, y * 1.15, -7] }
 })
 
-export function galaxyNodeById(id: string): GalaxyNode | undefined {
-  return GALAXY_NODES.find((n) => n.id === id)
-}
-
-/** the flyable stars, ordered as the flight meets them (origin → present).
- *  Sorted by era depth descending (z≈0 first, most-negative last); this is the
- *  spine of the HUD counter — "07 / 16" tells you how far through the arc you
- *  are. The career star is IN the timeline: it is the destination. */
-export const TIMELINE: string[] = NODES.map((n) => ({
-  id: n.id,
-  z: ERA_Z[NODE_ERA[n.id] ?? 'now'],
-}))
-  .sort((a, b) => b.z - a.z)
-  .map((n) => n.id)
-
-/** 1-based position of a node along the timeline (0 if not on it) */
-export function timelineIndex(id: string): number {
-  return TIMELINE.indexOf(id) + 1
-}
-
-/** the HUD era caption for a node (which chapter it belongs to) */
-export function eraLabelOf(id: string): string {
-  return ERA_LABELS[NODE_ERA[id] ?? 'now']
-}
-
-/** the flyable stars as {id, position} — the camera uses this to announce
- *  the star it is currently passing (drives the "now passing" HUD card).
- *  Includes the career star: the flight ends at the current role. */
-export const FLYABLE_NODES: { id: string; pos: [number, number, number] }[] = GALAXY_NODES.map(
-  (n) => ({ id: n.id, pos: n.pos }),
-)
-
-/** tip-to-tail chain in 3D for a role's vector sum */
+/** tip-to-tail chain in 3D for a role's vector sum (semantic plane coords) */
 export function chain3D(role: Role): {
   from: [number, number, number]
   to: [number, number, number]
   id: string
   w: number
 }[] {
-  let cur: [number, number, number] = [0, 0, ERA_Z.origin]
+  let cur: [number, number, number] = [0, 0, 0]
   const out = []
   for (const c of role.components) {
     const n = nodeById(c.id)
     if (!n) continue
     const next: [number, number, number] = [
-      cur[0] + c.w * n.x * SCALE,
-      cur[1] + c.w * n.y * SCALE,
-      cur[2] + c.w * (zOf(c.id) - ERA_Z.origin),
+      cur[0] + c.w * n.x * 1.15,
+      cur[1] + c.w * n.y * 1.15,
+      cur[2],
     ]
     out.push({ from: cur, to: next, id: c.id, w: c.w })
     cur = next
   }
   return out
 }
-
-/** camera flight path: starts just in front of the origin (+z), flies forward
- *  through −z past each era, arriving near the present. Camera looks toward −z. */
-export const FLIGHT_WAYPOINTS: [number, number, number][] = [
-  [0, 0.5, ERA_Z.origin + 9],
-  [-1.6, 1.1, ERA_Z['2024a'] + 8],
-  [1.3, 0.6, ERA_Z['2024b'] + 8],
-  [-0.7, 1.1, ERA_Z['2025'] + 8],
-  [1.6, 0.5, ERA_Z.now + 8],
-]

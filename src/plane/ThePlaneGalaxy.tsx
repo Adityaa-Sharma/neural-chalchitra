@@ -6,8 +6,8 @@ import * as THREE from 'three'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { Reveal } from '../components/Reveal'
 import { RevealTitle } from '../components/RevealTitle'
-import { NODES, nodeById, type PlaneNode } from './careerData'
-import { galaxyNodeById, eraLabelOf, timelineIndex, TIMELINE } from './galaxy/galaxyData'
+import { NODES, type PlaneNode } from './careerData'
+import { galaxyNodeById, stationIds, STATIONS } from './galaxy/galaxyData'
 import { NodeDrawer } from './NodeDrawer'
 import { ProjectIndex } from './ProjectIndex'
 import { ViewToggle, type PlaneView } from './ViewToggle'
@@ -89,8 +89,8 @@ function Galaxy3D() {
   const focusRef = useRef<THREE.Vector3 | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
   const [hovered, setHovered] = useState<string | null>(null)
-  // the star the camera is currently flying past — grounds the whole HUD
-  const [nearId, setNearId] = useState<string>('origin')
+  // the chapter (station) the camera is paused at — grounds the whole HUD
+  const [station, setStation] = useState(0)
   // immersive flight vs. the scannable card index
   const [view, setView] = useState<PlaneView>('flight')
 
@@ -159,12 +159,11 @@ function Galaxy3D() {
 
   const node = useMemo(() => NODES.find((n) => n.id === selected) ?? null, [selected])
 
-  // HUD grounding data — always reflects the star the camera is passing
-  const nearNode = nodeById(nearId)
-  const eraLabel = eraLabelOf(nearId)
-  const idx = timelineIndex(nearId)
-  const total = TIMELINE.length
-  const flying = nearId !== 'origin'
+  // HUD grounding data — always reflects the chapter the camera is paused at
+  const chapter = STATIONS[station]
+  const nearSet = useMemo(() => stationIds(station), [station])
+  const total = STATIONS.length
+  const flying = station > 0
   const pad2 = (n: number) => String(n).padStart(2, '0')
 
   return (
@@ -177,11 +176,11 @@ function Galaxy3D() {
               pointerRef={pointerRef}
               focusRef={focusRef}
               activeId={selected ?? hovered}
-              nearId={nearId}
-              litSet={null}
+              nearSet={nearSet}
+              litSet={nearSet}
               onSelect={select}
               onHover={setHovered}
-              onNear={setNearId}
+              onStation={setStation}
               reduced={false}
               starCount={starCount}
             />
@@ -195,30 +194,20 @@ function Galaxy3D() {
           <div className="gx-hud">
             <div className="gx-hud-bar">
               <span className="gx-hud-mark">NEURAL CHALCHITRA</span>
-              <span className="gx-hud-tag">/ PROJECTS</span>
-              <span className="gx-hud-era">{eraLabel}</span>
+              <span className="gx-hud-tag">/ THE WORK</span>
+              <span className="gx-hud-era">{chapter.title}</span>
               <span className="gx-hud-count">
-                {pad2(idx)} <i>/</i> {pad2(total)}
+                {pad2(station + 1)} <i>/</i> {pad2(total)}
               </span>
               <ViewToggle view={view} onChange={setView} />
             </div>
 
-            <button
-              type="button"
-              className={`gx-hud-card ${flying ? 'is-on' : ''}`}
-              onClick={() => nearNode && select(nearNode.id)}
-              aria-label={nearNode ? `Open ${nearNode.label}` : undefined}
-            >
-              <span className="gx-hud-kicker">now passing</span>
-              <span className="gx-hud-name">{nearNode?.label}</span>
-              {nearNode?.sub && <span className="gx-hud-sub">{nearNode.sub}</span>}
-              <span className="gx-hud-period">{nearNode?.period}</span>
-              <span className="gx-hud-open">▸ open the story</span>
-            </button>
-
-            <div className="gx-hud-axes">
-              <span>← research · production →</span>
-              <span>↑ models · infra ↓</span>
+            {/* chapter card — the station the camera is paused at */}
+            <div className={`gx-hud-card ${flying ? 'is-on' : ''}`}>
+              <span className="gx-hud-kicker">chapter {pad2(station + 1)}</span>
+              <span className="gx-hud-name">{chapter.title}</span>
+              <span className="gx-hud-sub">{chapter.meta}</span>
+              <span className="gx-hud-open">▸ tap a star for the story</span>
             </div>
           </div>
         )}

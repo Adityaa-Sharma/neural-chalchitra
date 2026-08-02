@@ -103,7 +103,7 @@
   align-self: center;
 }
 
-/* the "now passing" card — names each star as you fly to it; click = open */
+/* chapter card — names the station the camera is paused at */
 .gx-hud-card {
   position: absolute;
   left: var(--scene-pad-x);
@@ -112,28 +112,22 @@
   flex-direction: column;
   gap: 2px;
   text-align: left;
-  pointer-events: auto;
-  cursor: pointer;
   padding: 13px 18px 14px 16px;
   border: 1px solid rgba(232, 180, 79, 0.22);
   border-left: 2px solid var(--gold);
   background: rgba(9, 8, 14, 0.5);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  max-width: min(340px, 74vw);
+  max-width: min(360px, 74vw);
   opacity: 0;
   transform: translateY(10px);
   transition:
     opacity 0.5s ease,
-    transform 0.5s ease,
-    border-color 0.3s ease;
+    transform 0.5s ease;
 }
 .gx-hud-card.is-on {
   opacity: 1;
   transform: none;
-}
-.gx-hud-card:hover {
-  border-color: var(--gold);
 }
 
 .gx-hud-kicker {
