@@ -13,10 +13,10 @@ interface NodeDrawerProps {
 const KIND_LABEL: Record<string, string> = {
   origin: 'the origin',
   education: 'education',
-  paper: 'paper, implemented',
+  paper: 'independent research',
   project: 'project',
   work: 'production work',
-  career: 'the resultant',
+  career: 'current role',
   learning: 'in progress',
 }
 

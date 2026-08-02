@@ -102,7 +102,7 @@ interface GalaxyNodesProps {
 export function GalaxyNodes({ activeId, nearId, litSet, onSelect, onHover }: GalaxyNodesProps) {
   return (
     <group>
-      {GALAXY_NODES.filter((n) => n.kind !== 'career').map((n) => (
+      {GALAXY_NODES.map((n) => (
         <StarNode
           key={n.id}
           node={n}
@@ -113,8 +113,9 @@ export function GalaxyNodes({ activeId, nearId, litSet, onSelect, onHover }: Gal
           onHover={onHover}
         />
       ))}
-      {/* role destination stars (gold, larger) */}
-      {GALAXY_ROLES.map((r) => {
+      {/* role destination stars (gold, larger). savills is skipped — the career
+          star IS that role, at the same Σwᵢpᵢ point. */}
+      {GALAXY_ROLES.filter((r) => r.id !== 'savills').map((r) => {
         const node = GALAXY_NODES.find((n) => n.id === 'career')!
         return (
           <StarNode

@@ -24,32 +24,35 @@ const ERA_Z: Record<string, number> = {
 }
 
 /** human-facing era captions for the HUD — the grounding metadata layer.
- *  These are what keep the abstract star-field legible: at every moment the
- *  frame tells you WHICH chapter of the story you're flying through. */
+ *  Headings carry the arc on their own (a skimmer reads only these):
+ *  math → agents before the hype → founding member, govt scale →
+ *  fine-tunes & foundations → the client hired me away. */
 export const ERA_LABELS: Record<keyof typeof ERA_Z, string> = {
-  origin: 'ORIGIN · MATHEMATICS',
-  '2024a': '2024 · INTO MACHINE LEARNING',
-  '2024b': '2024–25 · SHIPPING SYSTEMS',
-  '2025': '2025 · PAPERS, FROM SCRATCH',
-  now: 'NOW · INTO THE MACHINE ROOM',
+  origin: 'ORIGIN · A MATH DEGREE',
+  '2024a': '2024 · AGENTS BEFORE THE HYPE',
+  '2024b': '2024–25 · FOUNDING MEMBER · POC → PRODUCTION',
+  '2025': '2025 · INDEPENDENT RESEARCH',
+  now: 'NOW · SENIOR AI ENGINEER · SAVILLS',
 }
 
 /** each node id → which era band it lives in */
 const NODE_ERA: Record<string, keyof typeof ERA_Z> = {
   origin: 'origin',
   'ms-iiitl': '2024a',
-  mistral: '2024a',
   pgagi: '2024a',
+  ailake: '2024b',
+  mhada: '2024b',
+  refreader: '2024b',
+  tendergenie: '2024b',
   gpt2: '2025',
   linformer: '2025',
   dqn: '2025',
-  refreader: '2024b',
   tradingmcp: '2025',
-  inframind: 'now',
+  career: 'now',
+  eve: 'now',
+  latimer: 'now',
   cuda: 'now',
   'vllm-study': 'now',
-  mhada: '2024b',
-  career: 'now',
 }
 
 export interface GalaxyNode {
@@ -109,9 +112,12 @@ export function galaxyNodeById(id: string): GalaxyNode | undefined {
 
 /** the flyable stars, ordered as the flight meets them (origin → present).
  *  Sorted by era depth descending (z≈0 first, most-negative last); this is the
- *  spine of the HUD counter — "07 / 13" tells you how far through the arc you are. */
-export const TIMELINE: string[] = NODES.filter((n) => n.kind !== 'career')
-  .map((n) => ({ id: n.id, z: ERA_Z[NODE_ERA[n.id] ?? 'now'] }))
+ *  spine of the HUD counter — "07 / 16" tells you how far through the arc you
+ *  are. The career star is IN the timeline: it is the destination. */
+export const TIMELINE: string[] = NODES.map((n) => ({
+  id: n.id,
+  z: ERA_Z[NODE_ERA[n.id] ?? 'now'],
+}))
   .sort((a, b) => b.z - a.z)
   .map((n) => n.id)
 
@@ -126,10 +132,11 @@ export function eraLabelOf(id: string): string {
 }
 
 /** the flyable stars as {id, position} — the camera uses this to announce
- *  the star it is currently passing (drives the "now passing" HUD card). */
-export const FLYABLE_NODES: { id: string; pos: [number, number, number] }[] = GALAXY_NODES.filter(
-  (n) => n.kind !== 'career',
-).map((n) => ({ id: n.id, pos: n.pos }))
+ *  the star it is currently passing (drives the "now passing" HUD card).
+ *  Includes the career star: the flight ends at the current role. */
+export const FLYABLE_NODES: { id: string; pos: [number, number, number] }[] = GALAXY_NODES.map(
+  (n) => ({ id: n.id, pos: n.pos }),
+)
 
 /** tip-to-tail chain in 3D for a role's vector sum */
 export function chain3D(role: Role): {

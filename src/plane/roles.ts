@@ -21,45 +21,47 @@ export interface Role {
 
 export const ROLES: Role[] = [
   {
-    id: 'datasmith',
-    title: 'Associate AI Engineer',
-    org: 'Datasmith.ai',
-    period: 'Oct 2024 — present',
-    kicker: 'govt-scale LLM systems, in production',
+    id: 'savills',
+    title: 'Senior AI Engineer',
+    org: 'Savills APAC',
+    period: '2025 — present',
+    kicker: 'the client hired me',
     blurb:
-      'Everything I had built pointed here. Shipped MHADA-Sathi for the Government of Maharashtra — an 8-tool agent on 4×A100s serving 100+ concurrent users — with the RAG instincts from RefReader, the from-scratch model intuition from GPT-2, and the infra thinking behind InfraMind all folded in.',
+      'Savills was my client at Datasmith; when I was leaving, they offered me the role directly. The serving work from MHADA, the fine-tuning from TenderGenie, the runtime agents from AI Lake and PG-AGI — this role is their weighted sum: architecting the APAC agent platform and hiring the team that builds it.',
     components: [
-      { id: 'mhada', w: 0.55 },
-      { id: 'refreader', w: 0.5 },
-      { id: 'inframind', w: 0.3 },
-      { id: 'gpt2', w: 0.15 },
+      { id: 'mhada', w: 0.6 },
+      { id: 'tendergenie', w: 0.5 },
+      { id: 'ailake', w: 0.2 },
+      { id: 'pgagi', w: 0.15 },
     ],
   },
   {
-    id: 'research',
+    id: 'datasmith',
+    title: 'Founding Member',
+    org: 'Datasmith.ai',
+    period: '2024 — 2025',
+    kicker: 'client POC → production, end to end',
+    blurb:
+      'I interviewed the hires, talked to the clients, and owned delivery from first POC to production. MHADA at government scale, the TenderGenie fine-tune, AI Lake — with the RAG instincts from RefReader folded in.',
+    components: [
+      { id: 'mhada', w: 0.55 },
+      { id: 'tendergenie', w: 0.4 },
+      { id: 'ailake', w: 0.3 },
+      { id: 'refreader', w: 0.1 },
+    ],
+  },
+  {
+    id: 'foundations',
     title: 'Papers, from scratch',
     org: 'self-directed',
     period: '2025',
     kicker: 'read the paper, then rebuilt it',
     blurb:
-      "Not a job — a discipline. I re-implemented three papers end to end: a 21.77M-parameter GPT-2, Linformer's linear attention, and DeepMind's DQN. This is the vector that points furthest into research: models built from first principles, not imported.",
+      'Not a job — my own research track. GPT-2, Linformer and DQN re-implemented end to end from the papers, because I want to understand these systems at the layer where they work, not just use them.',
     components: [
       { id: 'gpt2', w: 0.4 },
       { id: 'linformer', w: 0.3 },
       { id: 'dqn', w: 0.4 },
-    ],
-  },
-  {
-    id: 'pgagi',
-    title: 'AI/ML Intern',
-    org: 'PG-AGI',
-    period: 'May — Jun 2024',
-    kicker: 'the first industry rep',
-    blurb:
-      'Where building for someone else began: a natural-language multi-database querying PoC and custom GPT builds, carried by the applied-LLM footing from the Mistral fine-tune.',
-    components: [
-      { id: 'mistral', w: 0.7 },
-      { id: 'refreader', w: 0.15 },
     ],
   },
 ]

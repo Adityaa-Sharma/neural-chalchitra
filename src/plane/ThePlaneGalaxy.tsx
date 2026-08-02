@@ -73,7 +73,7 @@ function IndexFallback() {
         onClose={close}
         onNav={(dir) => {
           if (!node) return
-          const list = NODES.filter((n) => n.kind !== 'career')
+          const list = NODES
           const i = list.findIndex((n) => n.id === node.id)
           open(list[(i + dir + list.length) % list.length].id)
         }}
@@ -229,12 +229,12 @@ function Galaxy3D() {
               <strong>The Plane</strong> निर्देशांक तल
             </Reveal>
             <RevealTitle className="scene-title galaxy-title">
-              A career is a flight through space.
+              Every star here is something I built.
             </RevealTitle>
             <Reveal as="p" className="prose galaxy-lede">
-              Every star is a project, at its own coordinates in time. Scroll to fly from the origin —
-              a mathematics degree — forward to today. The frame names each one as you pass; tap it
-              for the full story.
+              Scroll to fly from the origin — a mathematics degree — through five years of agents,
+              fine-tunes and production systems, ending at the role I hold now. The frame names each
+              star as you pass; tap it for the full story.
             </Reveal>
             <Reveal as="p" className="galaxy-scrollcue" aria-hidden="true">
               scroll to fly ↓
@@ -256,7 +256,7 @@ function Galaxy3D() {
         onClose={closeDrawer}
         onNav={(dir) => {
           if (!node) return
-          const list = NODES.filter((n) => n.kind !== 'career')
+          const list = NODES
           const i = list.findIndex((n) => n.id === node.id)
           select(list[(i + dir + list.length) % list.length].id)
         }}

@@ -7,9 +7,10 @@ import './ProjectIndex.css'
 const KIND_LABEL: Record<string, string> = {
   origin: 'origin',
   education: 'education',
-  paper: 'paper',
+  paper: 'research',
   project: 'project',
   work: 'production',
+  career: 'current role',
   learning: 'in progress',
 }
 
@@ -75,7 +76,7 @@ interface ProjectIndexProps {
  *  path (recruiter with 90 seconds) and the reduced-motion / no-WebGL default. */
 export function ProjectIndex({ onOpen, view, onView }: ProjectIndexProps) {
   const groups = useEraGroups()
-  const total = NODES.filter((n) => n.kind !== 'career').length
+  const total = NODES.length
 
   return (
     <div className="pindex">
@@ -83,7 +84,7 @@ export function ProjectIndex({ onOpen, view, onView }: ProjectIndexProps) {
         <div className="pindex-head-l">
           <span className="pindex-kicker">The Work</span>
           <span className="pindex-count">
-            {total} projects · math → transformers → RL → infra
+            {total} stars · math → agents → production → savills apac
           </span>
         </div>
         {view && onView && <ViewToggle view={view} onChange={onView} />}
