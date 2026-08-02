@@ -33,7 +33,7 @@ const TTS_LANGS = new Set([
 ])
 
 const GREETING =
-  "Hi, I'm Aditya — good to have you here. My work is laid out as a star map; say 'show me the agent' and I'll take you there. And if you're from the field — what are you building these days?"
+  "Hi, I'm Aditya — good to have you here. Ask me anything about my work, or let's just talk AI — what are you building these days?"
 
 const ACTIONS = [
   'none',
