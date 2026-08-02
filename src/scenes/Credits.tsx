@@ -19,14 +19,8 @@ const ROLL: [string, string][] = [
   ['special thanks', 'the gradient, for always pointing somewhere'],
 ]
 
-/* Opinions from debugging, not a topic list. */
-const NOW = [
-  'Context bloat — most "hallucinations" I have debugged were context problems. MHADA runs on 16k on purpose.',
-  'Ray & tensor parallelism — one box is never the final answer',
-  'vLLM internals — reading the engine I deploy',
-  'CUDA kernels — going below the framework',
-  'And beyond these — anything exciting, with real impact, that pays well. Simple.',
-]
+/* One line, the honest version — no tech-stack list. */
+const NOW = ['Anything exciting, with real impact, that pays well. Simple.']
 
 /* The person, off the clock — small on purpose, all of it true. */
 const OFF_CLOCK = [
@@ -126,36 +120,6 @@ export function Credits() {
           </Reveal>
 
           <Reveal className="credits-block" delay={0.08}>
-            <h3>Also featuring</h3>
-            <a
-              className="credit-card glow-card"
-              href="https://github.com/Adityaa-Sharma/Ref_Reader_backend"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <strong>RefReader</strong>
-              <p>
-                AI research assistant over an ArXiv vector store — two-stage RAG, semantic search
-                with Qdrant + Postgres, deployed and running.
-              </p>
-              <span>python · fastapi · qdrant · docker</span>
-            </a>
-            <a
-              className="credit-card glow-card"
-              href="https://github.com/Adityaa-Sharma/Trading_mcp_server"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <strong>Trading MCP Server</strong>
-              <p>
-                MCP server giving LLMs real hands: live Upstox portfolio access, order execution,
-                AlphaVantage analytics — natural-language trading from an editor.
-              </p>
-              <span>mcp · pydantic · upstox api</span>
-            </a>
-          </Reveal>
-
-          <Reveal className="credits-block" delay={0.16}>
             <h3>Problems I&rsquo;m chasing</h3>
             <ul className="now-list">
               {NOW.map((item) => (
@@ -164,7 +128,7 @@ export function Credits() {
             </ul>
           </Reveal>
 
-          <Reveal className="credits-block" delay={0.24}>
+          <Reveal className="credits-block" delay={0.16}>
             <h3>Behind the scenes</h3>
             <ul className="now-list">
               {OFF_CLOCK.map((item) => (
