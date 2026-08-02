@@ -25,8 +25,8 @@ const NOW = ['Anything exciting, with real impact, that pays well. Simple.']
 /* The person, off the clock — small on purpose, all of it true. */
 const OFF_CLOCK = [
   'Badminton — state selections; represented IIIT Lucknow at Inter-IIIT, all India',
-  'NCC — B & C certificates; the discipline outlasted the uniform',
-  'Running — still the fastest way I know to clear a context window',
+  'NCC — B & C certificate holder',
+  'Running',
 ]
 
 function MagneticLink({ href, children }: { href: string; children: ReactNode }) {
