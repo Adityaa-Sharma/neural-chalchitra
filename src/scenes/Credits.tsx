@@ -25,7 +25,7 @@ const NOW = [
   'Ray & tensor parallelism — one box is never the final answer',
   'vLLM internals — reading the engine I deploy',
   'CUDA kernels — going below the framework',
-  'And beyond these — anything exciting to solve, with impact you can point at',
+  'And beyond these — anything exciting, with real impact, that pays well. Simple.',
 ]
 
 /* The person, off the clock — small on purpose, all of it true. */
@@ -60,8 +60,8 @@ export function Credits() {
             <PhotoStill />
           </Reveal>
           <Reveal as="p" className="prose" delay={0.1}>
-            I build things end to end and I own them end to end — this site included. What works
-            here is mine; what breaks is mine too.
+            I build things end to end and I own them end to end. What works here is mine; what
+            breaks is mine too.
           </Reveal>
         </div>
 
