@@ -27,50 +27,54 @@
 .logo-strip a {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
-  opacity: 0.72;
-  transition: opacity 0.25s ease;
+  transition: transform 0.2s ease;
 }
 
 .logo-strip a:hover {
-  opacity: 1;
+  transform: translateY(-2px);
 }
 
-/* light chip so real-colour marks stay legible on the dark surface */
+/* light chip so real-colour marks stay legible on the dark surface —
+ * full contrast, full size: the strip is proof, not decoration */
 .logo-chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 34px;
-  padding: 5px 8px;
-  border-radius: 5px;
-  background: color-mix(in srgb, var(--ink) 92%, transparent);
+  height: 52px;
+  padding: 7px 12px;
+  border-radius: 7px;
+  background: #f2ede2;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
 }
 
 .logo-chip img {
   display: block;
   height: 100%;
   width: auto;
-  max-width: 92px;
+  max-width: 130px;
   object-fit: contain;
 }
 
 .logo-chip.is-wide img {
-  max-width: 190px;
+  max-width: 260px;
 }
 
 .logo-name {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--ink-dim);
+  font-size: 12.5px;
+  letter-spacing: 0.05em;
+  color: var(--ink);
   white-space: nowrap;
 }
 
 @media (max-width: 600px) {
   .logo-strip ul {
     gap: var(--space-2) var(--space-3);
+  }
+  .logo-chip {
+    height: 42px;
   }
   .logo-name {
     display: none;

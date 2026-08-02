@@ -75,6 +75,25 @@
   flex: none;
 }
 
+/* the org's real mark, on a light chip so it reads on the dark surface */
+.pindex-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: #f2ede2;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+}
+.pindex-logo img {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: 96px;
+  object-fit: contain;
+}
+
 .pindex-meta {
   font-family: var(--font-mono);
   font-size: 11px;

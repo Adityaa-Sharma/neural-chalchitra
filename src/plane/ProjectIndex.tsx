@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import { nodeById, NODES, type PlaneNode } from './careerData'
 import { ViewToggle, type PlaneView } from './ViewToggle'
+import { asset } from '../lib/asset'
 import './ProjectIndex.css'
 
 const KIND_LABEL: Record<string, string> = {
@@ -17,13 +18,21 @@ const KIND_LABEL: Record<string, string> = {
  * and what shipped there, and what he drives himself. Grouping is by
  * affiliation, not time — a reviewer bifurcates education / jobs / own work
  * at a glance. Accents: ink = education, gold = employment, teal = self-driven. */
-const GROUPS: { key: string; org: string; meta: string; accent: string; ids: string[] }[] = [
+const GROUPS: {
+  key: string
+  org: string
+  meta: string
+  accent: string
+  ids: string[]
+  logo?: string
+}[] = [
   {
     key: 'edu',
     org: 'Education',
     meta: 'B.S. Mathematics 2020–23 · M.S. AI & ML, IIIT Lucknow 2023–25 · 9.23 CGPA',
     accent: '#ece7dd',
     ids: ['origin', 'ms-iiitl'],
+    logo: 'assets/logos/iiitl.png',
   },
   {
     key: 'pgagi',
@@ -31,6 +40,7 @@ const GROUPS: { key: string; org: string; meta: string; accent: string; ids: str
     meta: 'AI/ML Intern · 2024',
     accent: '#e8b44f',
     ids: ['pgagi'],
+    logo: 'assets/logos/pgagi.png',
   },
   {
     key: 'datasmith',
@@ -38,6 +48,7 @@ const GROUPS: { key: string; org: string; meta: string; accent: string; ids: str
     meta: 'Founding member · 2024 — 2025 · POC → production',
     accent: '#e8b44f',
     ids: ['ailake', 'mhada', 'tendergenie'],
+    logo: 'assets/logos/datasmith.svg',
   },
   {
     key: 'savills',
@@ -45,6 +56,7 @@ const GROUPS: { key: string; org: string; meta: string; accent: string; ids: str
     meta: 'Senior AI Engineer · APAC · 2025 — present',
     accent: '#e8b44f',
     ids: ['career'],
+    logo: 'assets/logos/savills.png',
   },
   {
     key: 'freelance',
@@ -130,6 +142,11 @@ export function ProjectIndex({ onOpen, view, onView }: ProjectIndexProps) {
             style={{ '--grp': g.accent } as CSSProperties}
           >
             <header className="pindex-group-head">
+              {g.logo && (
+                <span className="pindex-logo">
+                  <img src={asset(g.logo)} alt="" loading="lazy" />
+                </span>
+              )}
               <h3 className="pindex-org">{g.org}</h3>
               <span className="pindex-meta">{g.meta}</span>
             </header>
