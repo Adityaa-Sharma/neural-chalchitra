@@ -19,7 +19,7 @@ const PROOF = [
   { value: '< 4 s', label: 'agent latency · 8 tools · 16k ctx' },
   { value: '100+', label: 'concurrent users · 4×A100' },
   { value: '10,000', label: 'leases extracted · Ray' },
-  { value: '14B', label: 'Qwen3 fine-tune · past closed models' },
+  { value: '8B', label: 'Qwen3-VL fine-tune · past closed models' },
 ]
 
 /* Scannability rule (owner's spec): who / what / where readable in the first

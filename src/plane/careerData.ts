@@ -108,14 +108,14 @@ export const NODES: PlaneNode[] = [
   {
     id: 'tendergenie',
     label: 'TenderGenie',
-    sub: 'Qwen3-14B fine-tune · SFT + GRPO',
+    sub: 'Qwen3-VL-8B fine-tune · SFT → GRPO',
     kind: 'work',
     x: -0.5,
     y: 2.7,
     period: 'Datasmith.ai · funded product · finished during my notice period',
     blurb:
-      "Valve-industry datasheets have merged cells, rotated headers, several table schemas on one page — OpenAI's and Google's models were extracting them wrong. I set up automated dataset curation (Sarvam OCR, a frontier-model extraction pass, then human review) and fine-tuned Qwen3-14B with TRL. The first loss weighted every token equally, so the model did well on braces and colons and kept getting keys and values wrong — which is where the information is. A higher penalty on key and value tokens is what took it past the closed models, after SFT alone. GRPO improved it further. Runs logged in W&B.",
-    stack: ['qwen3-14b', 'sft + grpo · trl', 'weighted token loss', 'sarvam ocr', 'wandb'],
+      "Valve-industry datasheets have merged cells, rotated headers, several table schemas on one page — the closed models were extracting them wrong. I curated the dataset automatically (Sarvam OCR, a frontier-model pass, then human review) and fine-tuned Qwen3-VL-8B on one A100 80GB: LoRA (r=32) SFT with TRL, then GRPO — 8 candidates per image, scored by reward functions I wrote myself: JSON validity, schema compliance, per-field accuracy, a hallucination penalty. Scoring every token equally is the wrong objective — braces and colons are easy; keys and values are the information, so they carry the score. Past the closed models after SFT; GRPO pushed field accuracy further. Everything in W&B; served quantised (AWQ).",
+    stack: ['qwen3-vl-8b', 'lora sft → grpo · trl', 'rule-based rewards', 'sarvam ocr', 'a100 80gb · wandb'],
     links: [{ label: 'tendergenie.ai ↗', url: 'https://www.tendergenie.ai/' }],
     edges: ['mhada', 'gpt2', 'career'],
   },

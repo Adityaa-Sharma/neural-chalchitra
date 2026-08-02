@@ -82,10 +82,10 @@ export function Credits() {
               <p>
                 Owned client work from POC to production. MHADA (Govt. of Maharashtra): 8-tool
                 agent under 4 seconds on a 16k window, 4×A100 serving for 100+ concurrent users,
-                the whole deployment estate. TenderGenie: fine-tuned Qwen3-14B (SFT + GRPO, a
-                key/value-weighted loss) past the closed models on valve-industry datasheets.
-                AI Lake: chat with all your data, agent-chosen React outputs. Also interviewed
-                and hired the AI team.
+                the whole deployment estate. TenderGenie: fine-tuned Qwen3-VL-8B (LoRA SFT → GRPO
+                with rule-based rewards — per-field accuracy, JSON validity, a hallucination
+                penalty) past the closed models on valve-industry datasheets. AI Lake: chat with
+                all your data, agent-chosen React outputs. Also interviewed and hired the AI team.
               </p>
             </div>
             <div className="credit-entry">
