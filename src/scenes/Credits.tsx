@@ -25,6 +25,7 @@ const NOW = [
   'Ray & tensor parallelism — one box is never the final answer',
   'vLLM internals — reading the engine I deploy',
   'CUDA kernels — going below the framework',
+  'And beyond these — anything exciting to solve, with impact you can point at',
 ]
 
 function MagneticLink({ href, children }: { href: string; children: ReactNode }) {
@@ -52,9 +53,8 @@ export function Credits() {
             <PhotoStill />
           </Reveal>
           <Reveal as="p" className="prose" delay={0.1}>
-            Math degree, then models, then the machines they run on — I built everything on this
-            page myself. I like problems where the math has to survive contact with production. If
-            you have one of those, the contacts are below.
+            I build things end to end and I own them end to end — this site included. What works
+            here is mine; what breaks is mine too.
           </Reveal>
         </div>
 
