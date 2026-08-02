@@ -3,8 +3,12 @@
   display: grid;
   place-items: center;
   text-align: center;
+  /* film grade: teal high, ember low — the two accents as ambient light,
+   * faint enough that the scan zone stays clean */
   background:
-    radial-gradient(ellipse 80% 55% at 50% 118%, color-mix(in srgb, var(--gold-deep) 14%, transparent), transparent),
+    radial-gradient(ellipse 52% 38% at 82% -8%, color-mix(in srgb, var(--teal) 8%, transparent), transparent),
+    radial-gradient(ellipse 44% 40% at 8% 26%, color-mix(in srgb, var(--slate-red) 7%, transparent), transparent),
+    radial-gradient(ellipse 80% 55% at 50% 118%, color-mix(in srgb, var(--gold-deep) 18%, transparent), transparent),
     var(--bg);
 }
 
@@ -70,6 +74,11 @@
   font-weight: 620;
   letter-spacing: -0.02em;
   margin-bottom: var(--space-2);
+  /* projector-lamp gradient: cream catching gold at the foot of the letters */
+  background: linear-gradient(177deg, var(--ink) 42%, var(--gold) 108%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* the first-second anchor: who he is professionally, unmissable */
@@ -125,7 +134,7 @@
   font-weight: 600;
   font-size: var(--text-xl);
   font-variant-numeric: tabular-nums;
-  color: var(--ink);
+  color: var(--gold);
 }
 
 .proof-label {

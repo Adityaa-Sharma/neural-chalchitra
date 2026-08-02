@@ -34,7 +34,7 @@
   height: 100%;
   border-radius: 50%;
   overflow: hidden;
-  background: #171310;
+  background: #16161f;
   border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
   z-index: 1;
   transform: scale(calc(1 + var(--level) * 0.11));
@@ -141,7 +141,7 @@
 }
 
 .daimon-eye rect {
-  fill: #0b0a08;
+  fill: #0a0a11;
   transform-box: fill-box;
   transform-origin: center;
 }

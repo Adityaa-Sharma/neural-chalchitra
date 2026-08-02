@@ -320,7 +320,7 @@
   z-index: 4;
   overflow-y: auto;
   background:
-    radial-gradient(120% 80% at 50% 0%, rgba(20, 13, 7, 0.6), transparent 60%),
+    radial-gradient(120% 80% at 50% 0%, rgba(15, 14, 24, 0.6), transparent 60%),
     #07060a;
   animation: pindex-in 0.4s ease both;
 }

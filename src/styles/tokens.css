@@ -1,15 +1,18 @@
 /* ============================================================
    NEURAL CHALCHITRA — design tokens
-   Cinema-dark palette: warm near-black screen, marigold gold
-   (the projector lamp), spectral teal (the neural ghost).
+   Cinema-dark palette: cool indigo-black screen (the dark of the
+   theatre — one temperature with the star map and the galaxy's
+   opening fog), marigold gold (the projector lamp), spectral teal
+   (the neural ghost). Warm appears only where light does: gold
+   accents, the flight's arrival fog, the credits glow.
    ============================================================ */
 
 :root {
   /* color */
-  --bg: #0b0a08;
-  --bg-raised: #151209;
-  --bg-panel: #1b1710;
-  --line: #2e2718;
+  --bg: #0a0a11;
+  --bg-raised: #13131e;
+  --bg-panel: #191927;
+  --line: #2b2b3d;
   --ink: #ece7dd;
   --ink-dim: #a89f8c;
   --ink-faint: #8a8274; /* ≥4.5:1 on --bg for small mono labels */
