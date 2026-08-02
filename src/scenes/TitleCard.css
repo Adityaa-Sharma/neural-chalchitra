@@ -14,47 +14,86 @@
 }
 
 .title-eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+  font-family: var(--font-deva);
+  font-weight: 600;
+  font-size: var(--text-md);
+  color: var(--gold);
   margin-bottom: var(--space-5);
 }
 
-.title-deva {
-  font-family: var(--font-deva);
-  font-weight: 600;
-  font-size: var(--text-xl);
-  color: var(--gold);
-  margin-bottom: var(--space-2);
+.title-eyebrow span {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--text-xs);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
 
 .title-main {
   font-size: var(--text-hero);
   font-weight: 620;
   letter-spacing: -0.02em;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+/* the positioning claim — the one line a skimmer must leave with */
+.title-position {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--ink);
+  margin-bottom: var(--space-3);
 }
 
 .title-sub {
   color: var(--ink-dim);
-  font-size: var(--text-lg);
-  margin-bottom: var(--space-4);
-}
-
-.title-sub em {
-  color: var(--ink);
-  font-family: var(--font-display);
-}
-
-.title-tagline {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-style: italic;
-  color: var(--ink);
-  max-width: 34ch;
+  font-size: var(--text-md);
+  max-width: 52ch;
   margin-bottom: var(--space-5);
+}
+
+.title-sub strong {
+  color: var(--ink);
+}
+
+/* proof strip — four stat tiles: value (semibold, tabular) over a muted label.
+ * plain text tokens throughout; the numbers are the decoration. */
+.title-proof {
+  list-style: none;
+  padding: var(--space-3) 0;
+  margin: 0 0 var(--space-5);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2) clamp(18px, 4vw, 44px);
+  border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+.title-proof li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 120px;
+}
+
+.proof-value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.proof-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  max-width: 22ch;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .title-index {
