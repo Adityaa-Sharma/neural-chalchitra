@@ -1,0 +1,78 @@
+.logo-strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logo-strip-caption {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.logo-strip ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+.logo-strip a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  opacity: 0.72;
+  transition: opacity 0.25s ease;
+}
+
+.logo-strip a:hover {
+  opacity: 1;
+}
+
+/* light chip so real-colour marks stay legible on the dark surface */
+.logo-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--ink) 92%, transparent);
+}
+
+.logo-chip img {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: 92px;
+  object-fit: contain;
+}
+
+.logo-chip.is-wide img {
+  max-width: 190px;
+}
+
+.logo-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .logo-strip ul {
+    gap: var(--space-2) var(--space-3);
+  }
+  .logo-name {
+    display: none;
+  }
+}

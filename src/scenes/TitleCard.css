@@ -34,7 +34,18 @@
   font-size: var(--text-hero);
   font-weight: 620;
   letter-spacing: -0.02em;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+/* the first-second anchor: who he is professionally, unmissable */
+.title-role {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: var(--space-4);
 }
 
 /* the positioning claim — the one line a skimmer must leave with */
@@ -42,30 +53,26 @@
   font-family: var(--font-display);
   font-size: var(--text-xl);
   color: var(--ink);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 
 .title-sub {
   color: var(--ink-dim);
   font-size: var(--text-md);
-  max-width: 52ch;
+  max-width: 58ch;
   margin-bottom: var(--space-5);
 }
 
-.title-sub strong {
-  color: var(--ink);
-}
-
-/* proof strip — four stat tiles: value (semibold, tabular) over a muted label.
- * plain text tokens throughout; the numbers are the decoration. */
+/* proof strip — four stat tiles: value (semibold, tabular) over a short label.
+ * plain text tokens; the numbers are the decoration. */
 .title-proof {
   list-style: none;
   padding: var(--space-3) 0;
-  margin: 0 0 var(--space-5);
+  margin: 0 0 var(--space-4);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-2) clamp(18px, 4vw, 44px);
+  gap: var(--space-2) clamp(18px, 4vw, 48px);
   border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
 }
@@ -74,26 +81,69 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  min-width: 120px;
+  gap: 4px;
+  min-width: 130px;
 }
 
 .proof-value {
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);
   font-variant-numeric: tabular-nums;
   color: var(--ink);
 }
 
 .proof-label {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--ink-faint);
-  max-width: 22ch;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  max-width: 24ch;
   text-align: center;
   line-height: 1.5;
+}
+
+/* act without scrolling: the decision-maker's exits */
+.title-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.title-cta a {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 8px 18px;
+  border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  border-radius: 999px;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.title-cta a:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.title-cta .cta-main {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #17130a;
+  font-weight: 600;
+}
+
+.title-cta .cta-main:hover {
+  background: color-mix(in srgb, var(--gold) 85%, #fff);
+  color: #17130a;
+}
+
+.title-logos {
+  margin-bottom: var(--space-5);
 }
 
 .title-index {

@@ -2,6 +2,8 @@ import { useRef } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import { LogoStrip } from '../components/LogoStrip'
+import { asset } from '../lib/asset'
 import './TitleCard.css'
 
 gsap.registerPlugin(useGSAP)
@@ -14,12 +16,15 @@ const SCENES = [
 /* The four numbers a reviewer will spend their time verifying — shown before
  * anything asks for their patience. Values are facts from shipped systems. */
 const PROOF = [
-  { value: '< 4 s', label: '8-tool agent latency, 16k context' },
-  { value: '100+', label: 'concurrent users on 4×A100' },
-  { value: '10,000', label: 'leases batch-extracted with Ray' },
-  { value: '14B', label: 'Qwen3 fine-tune, past closed models on tables' },
+  { value: '< 4 s', label: 'agent latency · 8 tools · 16k ctx' },
+  { value: '100+', label: 'concurrent users · 4×A100' },
+  { value: '10,000', label: 'leases extracted · Ray' },
+  { value: '14B', label: 'Qwen3 fine-tune · past closed models' },
 ]
 
+/* Scannability rule (owner's spec): who / what / where readable in the first
+ * second, the whole hero in three. One quick fade only — no staggered
+ * entrances standing between a decision-maker and the content. */
 export function TitleCard() {
   const rootRef = useRef<HTMLElement>(null)
   const reducedMotion = usePrefersReducedMotion()
@@ -27,15 +32,7 @@ export function TitleCard() {
   useGSAP(
     () => {
       if (reducedMotion) return
-      gsap
-        .timeline({ defaults: { ease: 'power3.out' } })
-        .from('.title-eyebrow', { y: 24, opacity: 0, duration: 0.7, delay: 0.2 })
-        .from('.title-main', { y: 40, opacity: 0, duration: 0.9 }, '-=0.4')
-        .from('.title-position', { y: 24, opacity: 0, duration: 0.8 }, '-=0.5')
-        .from('.title-sub', { y: 20, opacity: 0, duration: 0.7 }, '-=0.5')
-        .from('.title-proof li', { y: 18, opacity: 0, stagger: 0.08, duration: 0.5 }, '-=0.4')
-        .from('.title-index li', { y: 16, opacity: 0, stagger: 0.09, duration: 0.5 }, '-=0.3')
-        .from('.title-cue', { opacity: 0, duration: 0.9 }, '-=0.1')
+      gsap.from('.title-inner', { opacity: 0, y: 12, duration: 0.45, ease: 'power2.out' })
     },
     { scope: rootRef, dependencies: [reducedMotion] },
   )
@@ -49,11 +46,13 @@ export function TitleCard() {
 
         <h1 className="title-main">Aditya Sharma</h1>
 
+        <p className="title-role">Senior AI Engineer · Savills APAC</p>
+
         <p className="title-position">I build agent systems that survive production.</p>
 
         <p className="title-sub">
-          Senior AI Engineer at <strong>Savills APAC</strong> — the client I served at Datasmith,
-          until they hired me. Mathematics degree first; agents since 2024, before the hype.
+          Savills was my client at Datasmith — then they hired me. Mathematics degree first;
+          agents since 2024, before the hype.
         </p>
 
         <ul className="title-proof" aria-label="headline numbers">
@@ -64,6 +63,22 @@ export function TitleCard() {
             </li>
           ))}
         </ul>
+
+        <div className="title-cta">
+          <a className="cta-main" href="mailto:mailmeifyoucan7@gmail.com">
+            email me
+          </a>
+          <a href={asset('Aditya_Sharma_Resume.pdf')} target="_blank" rel="noreferrer">
+            resume.pdf
+          </a>
+          <a href="https://github.com/Adityaa-Sharma" target="_blank" rel="noreferrer">
+            github
+          </a>
+        </div>
+
+        <div className="title-logos">
+          <LogoStrip />
+        </div>
 
         <ol className="title-index">
           {SCENES.map((s) => (
