@@ -39,6 +39,85 @@
   color: var(--ink-faint);
 }
 
+/* the flight invitation — a full-width strip that says what the 3D mode IS */
+.pindex-flight-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  margin-bottom: clamp(28px, 5vh, 48px);
+  padding: 14px 18px;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 6px;
+  background:
+    radial-gradient(120% 200% at 0% 50%, color-mix(in srgb, var(--gold) 10%, transparent), transparent 55%),
+    rgba(255, 255, 255, 0.02);
+  color: var(--ink);
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+.pindex-flight-banner:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pindex-flight-banner {
+    animation: pfb-glow 3s ease-in-out infinite;
+  }
+}
+@keyframes pfb-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(232, 180, 79, 0);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(232, 180, 79, 0.16);
+  }
+}
+
+.pfb-star {
+  color: var(--gold);
+  font-size: 20px;
+  flex: none;
+}
+
+.pfb-text {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+.pfb-text strong {
+  color: var(--ink);
+}
+
+.pfb-cta {
+  margin-left: auto;
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #17130a;
+  background: var(--gold);
+  padding: 8px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .pindex-flight-banner {
+    flex-wrap: wrap;
+  }
+  .pfb-cta {
+    margin-left: 34px;
+  }
+}
+
 /* affiliation band: org name big, role · period beside it, accent from --grp.
  * the bifurcation the cards themselves can't carry: education vs job vs own work */
 .pindex-group {

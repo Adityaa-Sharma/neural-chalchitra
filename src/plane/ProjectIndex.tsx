@@ -133,6 +133,21 @@ export function ProjectIndex({ onOpen, view, onView }: ProjectIndexProps) {
         {view && onView && <ViewToggle view={view} onChange={onView} />}
       </header>
 
+      {/* the invitation into the graphical atmosphere — explains what the
+          flight IS, right where the scan begins. */}
+      {view && onView && (
+        <button type="button" className="pindex-flight-banner" onClick={() => onView('flight')}>
+          <span className="pfb-star" aria-hidden="true">
+            ✦
+          </span>
+          <span className="pfb-text">
+            <strong>Prefer to see it, not read it?</strong> The same {NODES.length} stars as a 3D
+            flight — five chapters, from a mathematics degree to Savills, pausing at every stop.
+          </span>
+          <span className="pfb-cta">enter the flight →</span>
+        </button>
+      )}
+
       {GROUPS.map((g) => {
         const nodes = g.ids.map((id) => nodeById(id)).filter((n): n is PlaneNode => !!n)
         return (
