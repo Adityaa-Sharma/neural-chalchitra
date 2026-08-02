@@ -46,13 +46,13 @@ export function TitleCard() {
 
         <h1 className="title-main">Aditya Sharma</h1>
 
-        <p className="title-role">Senior AI Engineer · Savills APAC</p>
+        <p className="title-role">Senior AI Engineer · Savills</p>
 
         <p className="title-position">I build agent systems that survive production.</p>
 
         <p className="title-sub">
-          Savills was my client at Datasmith — then they hired me. Mathematics degree first;
-          agents since 2024, before the hype.
+          <strong>Savills</strong> was my client at Datasmith — then they hired me. Mathematics
+          degree first; agents since 2024, before the hype.
         </p>
 
         <ul className="title-proof" aria-label="headline numbers">

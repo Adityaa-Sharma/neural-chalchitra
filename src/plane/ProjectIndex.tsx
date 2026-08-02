@@ -53,7 +53,7 @@ const GROUPS: {
   {
     key: 'savills',
     org: 'Savills',
-    meta: 'Senior AI Engineer · APAC · 2025 — present',
+    meta: 'Senior AI Engineer · 2025 — present',
     accent: '#e8b44f',
     ids: ['career'],
     logo: 'assets/logos/savills.png',
@@ -128,7 +128,7 @@ export function ProjectIndex({ onOpen, view, onView }: ProjectIndexProps) {
       <header className="pindex-head">
         <div className="pindex-head-l">
           <span className="pindex-kicker">The Work</span>
-          <span className="pindex-count">{total} stars · education → jobs → own work</span>
+          <span className="pindex-count">{total} stars · math → agents → production → savills</span>
         </div>
         {view && onView && <ViewToggle view={view} onChange={onView} />}
       </header>

@@ -11,7 +11,7 @@ const ROLL: [string, string][] = [
   ['built, trained & deployed by', 'Aditya Sharma'],
   ['mathematics', 'B.S. Honors, Rajasthan University'],
   ['graduate studies', 'M.S. AI & ML, IIIT Lucknow · 9.23 CGPA'],
-  ['currently', 'Senior AI Engineer, Savills APAC'],
+  ['currently', 'Senior AI Engineer, Savills'],
   ['previously', 'Founding member, Datasmith.ai · AI/ML Intern, PG-AGI'],
   ['papers re-implemented', 'Vaswani 2017 · Wang 2020 · Mnih 2013'],
   ['compute', '4×A100 80GB (production) · 1×T4 16GB (poetry)'],
@@ -64,7 +64,7 @@ export function Credits() {
             <div className="credit-entry">
               <div className="credit-head">
                 <strong>Savills</strong>
-                <span>Senior AI Engineer · APAC · 2025 — present</span>
+                <span>Senior AI Engineer · 2025 — present</span>
               </div>
               <p>
                 Savills was my client at Datasmith; when I was leaving, they offered me the role.

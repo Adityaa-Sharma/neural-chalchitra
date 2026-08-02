@@ -66,7 +66,7 @@ export const STATIONS: GalaxyStation[] = [
   {
     id: 'savills',
     title: 'Savills',
-    meta: 'Senior AI Engineer · APAC · 2025 — present',
+    meta: 'Senior AI Engineer · 2025 — present',
     ids: ['career'],
     anchor: [0, 0.4, -60],
     camDist: 7.5,
