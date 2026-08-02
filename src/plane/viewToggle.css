@@ -35,3 +35,27 @@
   color: #07060a;
   background: var(--gold);
 }
+
+/* the invitation into the graphical atmosphere — unmissable, not in the way */
+.gx-toggle button.is-glow {
+  color: var(--gold);
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  box-shadow: 0 0 12px rgba(232, 180, 79, 0.25);
+}
+.gx-toggle button.is-glow:hover {
+  color: #07060a;
+  background: var(--gold);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .gx-toggle button.is-glow {
+    animation: gx-invite 2.4s ease-in-out infinite;
+  }
+}
+@keyframes gx-invite {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(232, 180, 79, 0.18);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(232, 180, 79, 0.42);
+  }
+}

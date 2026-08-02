@@ -7,21 +7,12 @@ interface ViewToggleProps {
   onChange: (v: PlaneView) => void
 }
 
-/** Subtle segmented switch: the immersive flight vs. the scannable index.
- *  The same control lives in the flight HUD and the index header, so the
- *  two views feel like one place seen two ways. */
+/** Segmented switch: the scannable index (default) vs. the immersive flight.
+ *  While the index is showing, the Flight chip glows — the invitation into
+ *  the graphical atmosphere is unmissable but never in the way. */
 export function ViewToggle({ view, onChange }: ViewToggleProps) {
   return (
     <div className="gx-toggle" role="tablist" aria-label="view">
-      <button
-        type="button"
-        role="tab"
-        aria-selected={view === 'flight'}
-        className={view === 'flight' ? 'is-on' : ''}
-        onClick={() => onChange('flight')}
-      >
-        Flight
-      </button>
       <button
         type="button"
         role="tab"
@@ -30,6 +21,15 @@ export function ViewToggle({ view, onChange }: ViewToggleProps) {
         onClick={() => onChange('index')}
       >
         Index
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={view === 'flight'}
+        className={view === 'flight' ? 'is-on' : 'is-glow'}
+        onClick={() => onChange('flight')}
+      >
+        <span aria-hidden="true">✦</span> 3D flight
       </button>
     </div>
   )
