@@ -39,28 +39,48 @@
   color: var(--ink-faint);
 }
 
-/* era band: a mono chapter label, then its cards */
-.pindex-era {
-  margin-bottom: clamp(30px, 5vh, 56px);
+/* affiliation band: org name big, role · period beside it, accent from --grp.
+ * the bifurcation the cards themselves can't carry: education vs job vs own work */
+.pindex-group {
+  margin-bottom: clamp(34px, 6vh, 64px);
 }
 
-.pindex-era-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin: 0 0 16px;
+.pindex-group-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--grp) 28%, transparent);
+}
+
+.pindex-org {
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.4vw, 24px);
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  color: var(--grp);
+  margin: 0;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
-.pindex-era-label::after {
+.pindex-org::before {
   content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(232, 180, 79, 0.3), transparent);
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--grp);
+  flex: none;
+}
+
+.pindex-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
 
 .pindex-grid {
@@ -69,7 +89,8 @@
   gap: clamp(12px, 1.4vw, 18px);
 }
 
-/* card */
+/* card — inherits its group's accent as a left rule, so education, each
+ * employer, and self-driven work stop looking identical */
 .pcard {
   display: flex;
   flex-direction: column;
@@ -78,6 +99,7 @@
   cursor: pointer;
   padding: 18px 18px 16px;
   border: 1px solid rgba(236, 231, 221, 0.1);
+  border-left: 2px solid color-mix(in srgb, var(--grp, var(--gold)) 45%, transparent);
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.015);
   color: var(--ink);
@@ -87,7 +109,7 @@
     transform 0.25s ease;
 }
 .pcard:hover {
-  border-color: rgba(232, 180, 79, 0.5);
+  border-color: color-mix(in srgb, var(--grp, var(--gold)) 65%, transparent);
   background: rgba(255, 255, 255, 0.04);
   transform: translateY(-2px);
 }

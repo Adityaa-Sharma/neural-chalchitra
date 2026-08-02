@@ -66,12 +66,12 @@ export const NODES: PlaneNode[] = [
   },
   {
     id: 'pgagi',
-    label: 'PG-AGI',
-    sub: 'first agent system · 2024',
+    label: 'Chat-with-DB agent',
+    sub: 'openai function calling · dspy',
     kind: 'work',
     x: 0.8,
     y: 1.1,
-    period: 'AI/ML Intern · 2024',
+    period: 'PG-AGI · AI/ML Intern · 2024',
     blurb:
       '2024, before agentic AI was a common term. I built a function-calling system to chat with a database in natural language — OpenAI function calling with DSPy — designed so a voice agent could run the whole retrieval engine at runtime.',
     stack: ['openai function calling', 'dspy', 'nl→sql'],
@@ -121,13 +121,13 @@ export const NODES: PlaneNode[] = [
   },
   {
     id: 'career',
-    label: 'Senior AI Engineer',
-    sub: 'Savills · the client hired me',
+    label: 'APAC Agent Platform',
+    sub: 'the client hired me',
     kind: 'career',
     // EXACTLY Σ wᵢ·pᵢ over RESULTANT below — keep in sync
     x: 2.27,
     y: 1.34,
-    period: 'Savills APAC · 2025 — present',
+    period: 'Savills · Senior AI Engineer · 2025 — present',
     blurb:
       "Savills was my client at Datasmith — I worked with their teams across 22 business lines in APAC: Singapore, Vietnam, Hong Kong, Australia, China. When I was leaving, they offered me the role directly. Since then: architected the APAC agent platform — agents, schedulers, outputs as live React components — demoed it to the APAC CIO, worked through GST/TDS reconciliation logic with the India CFO, built an RFI-response generator over the project-management team's SharePoint, and led hiring for the AI team.",
     stack: ['agent saas platform', 'ms entra s2s auth', 'apac · 22 business lines', 'team building'],
