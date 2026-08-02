@@ -1,0 +1,37 @@
+.gx-toggle {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid rgba(236, 231, 221, 0.16);
+  border-radius: 999px;
+  padding: 2px;
+  background: rgba(9, 8, 14, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+
+.gx-toggle button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  transition:
+    color 0.25s ease,
+    background 0.25s ease;
+}
+
+.gx-toggle button:hover {
+  color: var(--ink);
+}
+
+.gx-toggle button.is-on {
+  color: #07060a;
+  background: var(--gold);
+}

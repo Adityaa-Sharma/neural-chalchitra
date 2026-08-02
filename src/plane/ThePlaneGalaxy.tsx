@@ -9,12 +9,13 @@ import { RevealTitle } from '../components/RevealTitle'
 import { NODES, nodeById, type PlaneNode } from './careerData'
 import { galaxyNodeById, eraLabelOf, timelineIndex, TIMELINE } from './galaxy/galaxyData'
 import { NodeDrawer } from './NodeDrawer'
+import { ProjectIndex } from './ProjectIndex'
+import { ViewToggle, type PlaneView } from './ViewToggle'
 import './ThePlaneGalaxy.css'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 const Galaxy = lazy(() => import('./galaxy/Galaxy'))
-const ThePlane2D = lazy(() => import('./ThePlane').then((m) => ({ default: m.ThePlane })))
 
 function canRunWebGL(): boolean {
   try {
@@ -35,15 +36,49 @@ export function ThePlaneGalaxy() {
   }, [reducedMotion])
 
   if (use3D === null) return <section id="plane" style={{ minHeight: '100vh' }} />
-  if (!use3D) return <Fallback2D />
+  if (!use3D) return <IndexFallback />
   return <Galaxy3D />
 }
 
-function Fallback2D() {
+/** Reduced-motion / no-WebGL default: the scannable card index is the
+ *  accessible baseline — the galaxy is a progressive enhancement over it. */
+function IndexFallback() {
+  const [selected, setSelected] = useState<string | null>(null)
+
+  const open = useCallback((id: string) => {
+    setSelected(id)
+    history.replaceState(null, '', `#node=${id}`)
+  }, [])
+  const close = useCallback(() => {
+    setSelected(null)
+    history.replaceState(null, '', '#plane')
+  }, [])
+
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const id = (e as CustomEvent<string>).detail
+      if (NODES.some((n) => n.id === id)) open(id)
+    }
+    window.addEventListener('plane:open', onOpen)
+    return () => window.removeEventListener('plane:open', onOpen)
+  }, [open])
+
+  const node = NODES.find((n) => n.id === selected) ?? null
+
   return (
-    <Suspense fallback={<section id="plane" style={{ minHeight: '100vh' }} />}>
-      <ThePlane2D />
-    </Suspense>
+    <section id="plane" className="pindex-page">
+      <ProjectIndex onOpen={open} />
+      <NodeDrawer
+        node={node as PlaneNode | null}
+        onClose={close}
+        onNav={(dir) => {
+          if (!node) return
+          const list = NODES.filter((n) => n.kind !== 'career')
+          const i = list.findIndex((n) => n.id === node.id)
+          open(list[(i + dir + list.length) % list.length].id)
+        }}
+      />
+    </section>
   )
 }
 
@@ -56,6 +91,8 @@ function Galaxy3D() {
   const [hovered, setHovered] = useState<string | null>(null)
   // the star the camera is currently flying past — grounds the whole HUD
   const [nearId, setNearId] = useState<string>('origin')
+  // immersive flight vs. the scannable card index
+  const [view, setView] = useState<PlaneView>('flight')
 
   const starCount = useMemo(
     () => (typeof window !== 'undefined' && window.innerWidth < 768 ? 700 : 1300),
@@ -133,7 +170,7 @@ function Galaxy3D() {
   return (
     <section className="galaxy-section" id="plane" ref={rootRef}>
       <div className="galaxy-sticky">
-        <div className="galaxy-canvas">
+        <div className={`galaxy-canvas ${view === 'index' ? 'is-hidden' : ''}`}>
           <Suspense fallback={null}>
             <Galaxy
               scrollRef={scrollRef}
@@ -154,51 +191,64 @@ function Galaxy3D() {
         {/* persistent metadata layer — keeps the star-field legible: the frame
             always says these are PROJECTS, which era you're in, and names the
             star you're passing. (the sidewave move.) */}
-        <div className="gx-hud">
-          <div className="gx-hud-bar">
-            <span className="gx-hud-mark">NEURAL CHALCHITRA</span>
-            <span className="gx-hud-tag">/ PROJECTS</span>
-            <span className="gx-hud-era">{eraLabel}</span>
-            <span className="gx-hud-count">
-              {pad2(idx)} <i>/</i> {pad2(total)}
-            </span>
+        {view === 'flight' && (
+          <div className="gx-hud">
+            <div className="gx-hud-bar">
+              <span className="gx-hud-mark">NEURAL CHALCHITRA</span>
+              <span className="gx-hud-tag">/ PROJECTS</span>
+              <span className="gx-hud-era">{eraLabel}</span>
+              <span className="gx-hud-count">
+                {pad2(idx)} <i>/</i> {pad2(total)}
+              </span>
+              <ViewToggle view={view} onChange={setView} />
+            </div>
+
+            <button
+              type="button"
+              className={`gx-hud-card ${flying ? 'is-on' : ''}`}
+              onClick={() => nearNode && select(nearNode.id)}
+              aria-label={nearNode ? `Open ${nearNode.label}` : undefined}
+            >
+              <span className="gx-hud-kicker">now passing</span>
+              <span className="gx-hud-name">{nearNode?.label}</span>
+              {nearNode?.sub && <span className="gx-hud-sub">{nearNode.sub}</span>}
+              <span className="gx-hud-period">{nearNode?.period}</span>
+              <span className="gx-hud-open">▸ open the story</span>
+            </button>
+
+            <div className="gx-hud-axes">
+              <span>← research · production →</span>
+              <span>↑ models · infra ↓</span>
+            </div>
           </div>
+        )}
 
-          <button
-            type="button"
-            className={`gx-hud-card ${flying ? 'is-on' : ''}`}
-            onClick={() => nearNode && select(nearNode.id)}
-            aria-label={nearNode ? `Open ${nearNode.label}` : undefined}
-          >
-            <span className="gx-hud-kicker">now passing</span>
-            <span className="gx-hud-name">{nearNode?.label}</span>
-            {nearNode?.sub && <span className="gx-hud-sub">{nearNode.sub}</span>}
-            <span className="gx-hud-period">{nearNode?.period}</span>
-            <span className="gx-hud-open">▸ open the story</span>
-          </button>
-
-          <div className="gx-hud-axes">
-            <span>← research · production →</span>
-            <span>↑ models · infra ↓</span>
+        {view === 'flight' && (
+          <div className={`galaxy-overlay ${flying ? 'is-flown' : ''}`}>
+            <Reveal className="slate">
+              <strong>The Plane</strong> निर्देशांक तल
+            </Reveal>
+            <RevealTitle className="scene-title galaxy-title">
+              A career is a flight through space.
+            </RevealTitle>
+            <Reveal as="p" className="prose galaxy-lede">
+              Every star is a project, at its own coordinates in time. Scroll to fly from the origin —
+              a mathematics degree — forward to today. The frame names each one as you pass; tap it
+              for the full story.
+            </Reveal>
+            <Reveal as="p" className="galaxy-scrollcue" aria-hidden="true">
+              scroll to fly ↓
+            </Reveal>
           </div>
-        </div>
+        )}
 
-        <div className={`galaxy-overlay ${flying ? 'is-flown' : ''}`}>
-          <Reveal className="slate">
-            <strong>The Plane</strong> निर्देशांक तल
-          </Reveal>
-          <RevealTitle className="scene-title galaxy-title">
-            A career is a flight through space.
-          </RevealTitle>
-          <Reveal as="p" className="prose galaxy-lede">
-            Every star is a project, at its own coordinates in time. Scroll to fly from the origin —
-            a mathematics degree — forward to today. The frame names each one as you pass; tap it for
-            the full story.
-          </Reveal>
-          <Reveal as="p" className="galaxy-scrollcue" aria-hidden="true">
-            scroll to fly ↓
-          </Reveal>
-        </div>
+        {/* the scannable normal view — slides over the flight, same data,
+            opens the same story panel. always one tap away via the toggle. */}
+        {view === 'index' && (
+          <div className="pindex-overlay" data-lenis-prevent>
+            <ProjectIndex onOpen={select} view={view} onView={setView} />
+          </div>
+        )}
       </div>
 
       <NodeDrawer

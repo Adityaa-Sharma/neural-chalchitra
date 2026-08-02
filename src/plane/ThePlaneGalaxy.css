@@ -17,6 +17,12 @@
   inset: 0;
 }
 
+/* while the Index overlay is open, hide the whole canvas — this also hides the
+   drei <Html> star labels, which otherwise bleed through on their ~16M z-index */
+.galaxy-canvas.is-hidden {
+  visibility: hidden;
+}
+
 .galaxy-canvas canvas {
   display: block;
   touch-action: pan-y;
@@ -92,6 +98,9 @@
   color: var(--ink-faint);
   font-style: normal;
   margin: 0 2px;
+}
+.gx-hud-bar .gx-toggle {
+  align-self: center;
 }
 
 /* the "now passing" card — names each star as you fly to it; click = open */
@@ -178,12 +187,17 @@
 
 @media (max-width: 600px) {
   .gx-hud-mark,
+  .gx-hud-era,
   .gx-hud-axes {
     display: none;
   }
   .gx-hud-bar {
     font-size: 10px;
     letter-spacing: 0.16em;
+  }
+  /* keep PROJECTS pinned left, counter + toggle to the right */
+  .gx-hud-count {
+    margin-left: auto;
   }
 }
 

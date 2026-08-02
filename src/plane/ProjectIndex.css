@@ -1,0 +1,218 @@
+.pindex {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(28px, 6vh, 72px) var(--scene-pad-x) clamp(80px, 14vh, 140px);
+}
+
+/* header: title + count on the left, the Flight/Index toggle on the right */
+.pindex-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-bottom: clamp(18px, 3vh, 30px);
+  border-bottom: 1px solid rgba(236, 231, 221, 0.12);
+  margin-bottom: clamp(28px, 5vh, 52px);
+}
+
+.pindex-head-l {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pindex-kicker {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.pindex-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* era band: a mono chapter label, then its cards */
+.pindex-era {
+  margin-bottom: clamp(30px, 5vh, 56px);
+}
+
+.pindex-era-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.pindex-era-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(232, 180, 79, 0.3), transparent);
+}
+
+.pindex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: clamp(12px, 1.4vw, 18px);
+}
+
+/* card */
+.pcard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  cursor: pointer;
+  padding: 18px 18px 16px;
+  border: 1px solid rgba(236, 231, 221, 0.1);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.015);
+  color: var(--ink);
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+.pcard:hover {
+  border-color: rgba(232, 180, 79, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-2px);
+}
+
+.pcard-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+.pcard-kind {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #63d8c6;
+}
+.pcard-kind-education,
+.pcard-kind-work {
+  color: var(--gold);
+}
+.pcard-kind-origin {
+  color: var(--ink);
+}
+.pcard-year {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+.pcard-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--ink);
+}
+.pcard-sub {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+  margin: 0 0 4px;
+}
+.pcard-blurb {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-faint);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pcard-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.pcard-stack span {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+  padding: 3px 7px;
+  border: 1px solid rgba(236, 231, 221, 0.12);
+  border-radius: 999px;
+}
+
+.pcard-open {
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #63d8c6;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+.pcard:hover .pcard-open,
+.pcard:focus-visible .pcard-open {
+  opacity: 1;
+  transform: none;
+}
+
+/* the index rendered as an overlay over the galaxy flight */
+.pindex-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow-y: auto;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(20, 13, 7, 0.6), transparent 60%),
+    #07060a;
+  animation: pindex-in 0.4s ease both;
+}
+@keyframes pindex-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* the index rendered as the accessible default (no galaxy behind it) */
+.pindex-page {
+  min-height: 100vh;
+  background: #07060a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pindex-overlay,
+  .pcard {
+    animation: none;
+    transition: none;
+  }
+}
