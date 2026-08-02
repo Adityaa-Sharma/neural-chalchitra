@@ -49,7 +49,7 @@ export function PhotoStill() {
       <figcaption>
         aditya sharma · pune, india
         <br />
-        <span>starring in all four scenes</span>
+        <span>senior ai engineer · savills apac</span>
       </figcaption>
     </figure>
   )
